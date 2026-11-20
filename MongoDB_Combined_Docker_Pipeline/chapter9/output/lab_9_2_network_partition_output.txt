@@ -1,0 +1,83 @@
+LAB 9.2 - SIMULATE A NETWORK PARTITION
+
+Setup: healthy 3-node replica set
+  replica set rs0 is already initialised
+  member         state      health
+  mongo1:27017   SECONDARY  1
+  mongo2:27017   PRIMARY    1
+  mongo3:27017   SECONDARY  1
+  primary = mongo2:27017   secondaries = mongo1:27017, mongo3:27017   docker network = combined-mongo-net
+
+Timeline  (elapsed time, clock, source, event)
+     0.1s  21:02:36  [OBSERVER] mongo1=SECONDARY  mongo2=PRIMARY  mongo3=SECONDARY   | primary sees down: none
+     2.1s  21:02:38  [MAIN    ] all members healthy, starting the experiment
+
+  --- Phase A: partition ONE secondary ---
+     2.4s  21:02:39  [DOCKER  ] docker network disconnect combined-mongo-net combined-mongo1   <-- mongo1:27017 partitioned
+     5.3s  21:02:42  [OBSERVER] mongo1=UNREACHABLE  mongo2=PRIMARY  mongo3=SECONDARY   | primary sees down: none
+    14.2s  21:02:50  [OBSERVER] mongo1=UNREACHABLE  mongo2=PRIMARY  mongo3=SECONDARY   | primary sees down: mongo1
+    14.4s  21:02:51  [MAIN    ] primary marked mongo1:27017 as down after 12.0 s (heartbeat timeout); mongo2:27017 + mongo3:27017 are still 2 of 3 = a majority
+    14.5s  21:02:51  [INSERT  ] w: 1                             SUCCESS      23.2 ms   acknowledged
+    14.5s  21:02:51  [INSERT  ] w: majority                      SUCCESS      28.6 ms   acknowledged
+    14.5s  21:02:51  [MAIN    ] primary is still mongo2:27017
+    14.5s  21:02:51  [MAIN    ] holding the partition for another 18 s ...
+
+  --- Phase B: partition the OTHER secondary as well (primary is alone) ---
+    32.5s  21:03:09  [DOCKER  ] docker network disconnect combined-mongo-net combined-mongo3   <-- mongo3:27017 partitioned
+    32.5s  21:03:09  [INSERT  ] w: 1 (before step-down)          SUCCESS       2.9 ms   acknowledged
+    36.1s  21:03:12  [OBSERVER] mongo1=UNREACHABLE  mongo2=PRIMARY  mongo3=UNREACHABLE   | primary sees down: mongo1
+    37.5s  21:03:14  [INSERT  ] w: majority (before step-down)   FAILED     5017.6 ms   WTimeoutError: waiting for replication timed out
+    42.1s  21:03:18  [OBSERVER] mongo1=UNREACHABLE  mongo2=PRIMARY  mongo3=UNREACHABLE   | primary sees down: mongo1, mongo3
+    45.2s  21:03:21  [OBSERVER] mongo1=UNREACHABLE  mongo2=SECONDARY  mongo3=UNREACHABLE   | NO PRIMARY (read-only)
+    45.5s  21:03:22  [MAIN    ] mongo2:27017 STEPPED DOWN to SECONDARY 13.4 s after it lost its majority - no member can accept writes
+    50.8s  21:03:27  [INSERT  ] w: 1 (after step-down)           FAILED     5261.9 ms   ServerSelectionTimeoutError: No primary available for writes
+    50.8s  21:03:27  [READ    ] read from mongo2:27017 SUCCESS - 4 documents: the set is read-only
+    50.8s  21:03:27  [MAIN    ] holding the partition for another 11 s ...
+
+  --- Phase C: heal the partition ---
+    62.3s  21:03:39  [DOCKER  ] docker network connect combined-mongo-net combined-mongo1   <-- mongo1:27017 back on the network
+    62.4s  21:03:39  [DOCKER  ] docker network connect combined-mongo-net combined-mongo3   <-- mongo3:27017 back on the network
+    62.8s  21:03:39  [OBSERVER] mongo1=UNREACHABLE  mongo2=SECONDARY  mongo3=SECONDARY   | NO PRIMARY (read-only)
+    63.8s  21:03:40  [OBSERVER] mongo1=SECONDARY  mongo2=SECONDARY  mongo3=SECONDARY   | NO PRIMARY (read-only)
+    64.8s  21:03:41  [OBSERVER] mongo1=SECONDARY  mongo2=SECONDARY  mongo3=PRIMARY   | primary sees down: none
+    64.9s  21:03:41  [MAIN    ] election finished: mongo3:27017 is PRIMARY 2.7 s after the reconnect (old primary was mongo2:27017)
+    64.9s  21:03:41  [CATCH-UP] mongo1=SECONDARY lag=65.0s  mongo2=SECONDARY lag=32.0s  mongo3=PRIMARY lag=0.0s
+    66.9s  21:03:43  [CATCH-UP] mongo1=SECONDARY lag=0.0s  mongo2=SECONDARY lag=0.0s  mongo3=PRIMARY lag=0.0s
+    66.9s  21:03:43  [MAIN    ] all members caught up 4.8 s after the reconnect
+
+Which test documents does each member hold now?
+  insert                           result during partition   mongo1  mongo2  mongo3
+  w: 1                             SUCCESS 23.2 ms                1       1       1
+  w: majority                      SUCCESS 28.6 ms                1       1       1
+  w: 1 (before step-down)          SUCCESS 2.9 ms                 1       1       1
+  w: majority (before step-down)   FAILED 5017.6 ms               1       1       1
+  w: 1 (after step-down)           FAILED 5261.9 ms               0       0       0
+
+  on every member after recovery: w: 1, w: majority, w: 1 (before step-down), w: majority (before step-down)
+  failed and not stored anywhere: w: 1 (after step-down)
+  reported as failed but still stored: w: majority (before step-down) (a wtimeout does not undo the write)
+
+Timeline of key events
+     2.1s  21:02:38  all members healthy, starting the experiment
+     2.4s  21:02:39  docker network disconnect combined-mongo-net combined-mongo1   <-- mongo1:27017 partitioned
+    14.4s  21:02:51  primary marked mongo1:27017 as down after 12.0 s (heartbeat timeout); mongo2:27017 + mongo3:27017 are still 2 of 3 = a majority
+    14.5s  21:02:51  w: 1                             SUCCESS      23.2 ms   acknowledged
+    14.5s  21:02:51  w: majority                      SUCCESS      28.6 ms   acknowledged
+    32.5s  21:03:09  docker network disconnect combined-mongo-net combined-mongo3   <-- mongo3:27017 partitioned
+    32.5s  21:03:09  w: 1 (before step-down)          SUCCESS       2.9 ms   acknowledged
+    37.5s  21:03:14  w: majority (before step-down)   FAILED     5017.6 ms   WTimeoutError: waiting for replication timed out
+    45.5s  21:03:22  mongo2:27017 STEPPED DOWN to SECONDARY 13.4 s after it lost its majority - no member can accept writes
+    50.8s  21:03:27  w: 1 (after step-down)           FAILED     5261.9 ms   ServerSelectionTimeoutError: No primary available for writes
+    50.8s  21:03:27  read from mongo2:27017 SUCCESS - 4 documents: the set is read-only
+    62.3s  21:03:39  docker network connect combined-mongo-net combined-mongo1   <-- mongo1:27017 back on the network
+    62.4s  21:03:39  docker network connect combined-mongo-net combined-mongo3   <-- mongo3:27017 back on the network
+    64.9s  21:03:41  election finished: mongo3:27017 is PRIMARY 2.7 s after the reconnect (old primary was mongo2:27017)
+    66.9s  21:03:43  all members caught up 4.8 s after the reconnect
+
+Final rs.status()
+  member         state      health
+  mongo1:27017   SECONDARY  1
+  mongo2:27017   SECONDARY  1
+  mongo3:27017   PRIMARY    1
+
+MongoDB commands and replies saved to output/lab_9_2_network_partition.json

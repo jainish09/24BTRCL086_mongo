@@ -1,0 +1,100 @@
+name: mongodb-chapter11-sharding
+
+services:
+  # ============================================================================
+  # 1. Config Server Replica Set (CSRS)
+  # Stores cluster metadata, routing tables, and chunk boundaries
+  # ============================================================================
+  cfg1:
+    image: mongo:7.0
+    container_name: chapter11-cfg1
+    hostname: cfg1
+    command: ["mongod", "--configsvr", "--replSet", "rs-config", "--bind_ip_all", "--port", "27017"]
+    ports:
+      - "127.0.0.1:27021:27017"
+    volumes:
+      - chapter11-cfg1-data:/data/db
+    networks:
+      sharding-net:
+        aliases: [cfg1]
+    restart: unless-stopped
+
+  # ============================================================================
+  # 2. Data Shard 1 Replica Set
+  # Holds chunk subset A
+  # ============================================================================
+  shard1:
+    image: mongo:7.0
+    container_name: chapter11-shard1
+    hostname: shard1
+    command: ["mongod", "--shardsvr", "--replSet", "rs-shard1", "--bind_ip_all", "--port", "27017"]
+    ports:
+      - "127.0.0.1:27022:27017"
+    volumes:
+      - chapter11-shard1-data:/data/db
+    networks:
+      sharding-net:
+        aliases: [shard1]
+    restart: unless-stopped
+
+  # ============================================================================
+  # 3. Data Shard 2 Replica Set
+  # Holds chunk subset B
+  # ============================================================================
+  shard2:
+    image: mongo:7.0
+    container_name: chapter11-shard2
+    hostname: shard2
+    command: ["mongod", "--shardsvr", "--replSet", "rs-shard2", "--bind_ip_all", "--port", "27017"]
+    ports:
+      - "127.0.0.1:27023:27017"
+    volumes:
+      - chapter11-shard2-data:/data/db
+    networks:
+      sharding-net:
+        aliases: [shard2]
+    restart: unless-stopped
+
+  # ============================================================================
+  # 4. mongos Query Router
+  # Routes client queries and write operations to the appropriate shards
+  # ============================================================================
+  mongos:
+    image: mongo:7.0
+    container_name: chapter11-mongos
+    hostname: mongos
+    command: ["mongos", "--configdb", "rs-config/cfg1:27017", "--bind_ip_all", "--port", "27017"]
+    ports:
+      - "127.0.0.1:27027:27017"
+    depends_on:
+      - cfg1
+      - shard1
+      - shard2
+    networks:
+      sharding-net:
+        aliases: [mongos]
+    restart: unless-stopped
+
+  # ============================================================================
+  # 5. Lab 11 App / Test Runner Container (Optional in-cluster execution)
+  # ============================================================================
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: chapter11-runner:local
+    container_name: chapter11-app
+    depends_on:
+      - mongos
+    networks:
+      - sharding-net
+    profiles: ["app"]
+
+networks:
+  sharding-net:
+    name: chapter11-sharding-net
+
+volumes:
+  chapter11-cfg1-data:
+  chapter11-shard1-data:
+  chapter11-shard2-data:

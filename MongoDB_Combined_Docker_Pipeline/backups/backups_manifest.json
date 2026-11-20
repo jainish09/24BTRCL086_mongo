@@ -1,0 +1,926 @@
+{
+  "updatedAt": "2026-11-20T15:23:49.868018+00:00",
+  "storageDir": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups",
+  "backups": [
+    {
+      "id": "backup_20261120_152147",
+      "name": "threatpulse_backup_20261120_152147.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261120_152147.archive.gz",
+      "sizeMB": 3.06,
+      "sizeBytes": 3207566,
+      "timestamp": "2026-11-20T15:21:47.347014+00:00",
+      "status": "COMPLETED",
+      "collections": {
+        "threat_reports": 13301
+      },
+      "documentsCount": 13301,
+      "durationSec": 122.514,
+      "verified": false,
+      "verifiedAt": null,
+      "restoreDurationSec": null,
+      "checksum": "sha256:7d181ea7802533810d05ea65ab1cff7297bd17ebdbbf480d95bdc9d0aca43820"
+    },
+    {
+      "id": "backup_20261120_133206",
+      "name": "threatpulse_backup_20261120_133206.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261120_133206.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 528,
+      "timestamp": "2026-11-20T13:32:06.894319+00:00",
+      "status": "COMPLETED",
+      "collections": {
+        "users": 0,
+        "sessions": 4
+      },
+      "documentsCount": 4,
+      "durationSec": 0.021,
+      "verified": false,
+      "verifiedAt": null,
+      "restoreDurationSec": null,
+      "checksum": "sha256:9549c6d2e5fdf9c97f84628f3d607ae394552c67a6ae3f63d2c911f8861ea7ba"
+    },
+    {
+      "id": "backup_20261120_123155",
+      "name": "threatpulse_backup_20261120_123155.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261120_123155.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-20T12:31:55.320320+00:00",
+      "status": "COMPLETED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": false,
+      "verifiedAt": null,
+      "restoreDurationSec": null,
+      "checksum": "sha256:d85dfa7ace323a479e9c8f9c2d925bc3ca5024cf862017b125a25d3709a86d81"
+    },
+    {
+      "id": "backup_20261120_113113",
+      "name": "threatpulse_backup_20261120_113113.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261120_113113.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 209,
+      "timestamp": "2026-11-20T11:31:13.809881+00:00",
+      "status": "COMPLETED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.022,
+      "verified": false,
+      "verifiedAt": null,
+      "restoreDurationSec": null,
+      "checksum": "sha256:f184d8893472887c0627e89d5c2d32992a02bac6da4af874a44b7ab2c050ebc7"
+    },
+    {
+      "id": "backup_20261120_103016",
+      "name": "threatpulse_backup_20261120_103016.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261120_103016.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-20T10:30:16.771956+00:00",
+      "status": "COMPLETED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": false,
+      "verifiedAt": null,
+      "restoreDurationSec": null,
+      "checksum": "sha256:7c952d8b61dec639190c926950a71848f016a2dd44ad633121e4d4b1282618bf"
+    },
+    {
+      "id": "backup_20261119_191818",
+      "name": "threatpulse_backup_20261119_191818.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261119_191818.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-19T19:18:18.616964+00:00",
+      "status": "COMPLETED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.024,
+      "verified": false,
+      "verifiedAt": null,
+      "restoreDurationSec": null,
+      "checksum": "sha256:92d7a5948c7b88be455f18b93b4ed22ddefd382c6d30a50fbffce64633310380"
+    },
+    {
+      "id": "backup_20261119_173708",
+      "name": "threatpulse_backup_20261119_173708.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261119_173708.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 211,
+      "timestamp": "2026-11-19T17:37:08.859044+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": true,
+      "verifiedAt": "2026-11-19T17:37:08.862545+00:00",
+      "restoreDurationSec": 0.01,
+      "checksum": "sha256:4134b6bb8df31c488186a6d96d12ef580e73d8778cfaaeb935d876f47cc6bf95"
+    },
+    {
+      "id": "backup_20261119_173700",
+      "name": "threatpulse_backup_20261119_173700.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261119_173700.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 211,
+      "timestamp": "2026-11-19T17:37:00.508505+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": true,
+      "verifiedAt": "2026-11-19T17:37:00.516018+00:00",
+      "restoreDurationSec": 0.01,
+      "checksum": "sha256:5edf11914c588c62b539af8ba5b1e7c65e3a3af31c824cbe3b960081b8ab41aa"
+    },
+    {
+      "id": "backup_20261119_173623",
+      "name": "threatpulse_backup_20261119_173623.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261119_173623.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 211,
+      "timestamp": "2026-11-19T17:36:23.475835+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": true,
+      "verifiedAt": "2026-11-19T17:36:23.490500+00:00",
+      "restoreDurationSec": 0.01,
+      "checksum": "sha256:191aca83653dd542dc0fe07c6240b3f1a33af0c4595f4afd2533ca905a470a59"
+    },
+    {
+      "id": "backup_20261119_173427",
+      "name": "threatpulse_backup_20261119_173427.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261119_173427.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 211,
+      "timestamp": "2026-11-19T17:34:27.871194+00:00",
+      "status": "COMPLETED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": false,
+      "verifiedAt": null,
+      "restoreDurationSec": null,
+      "checksum": "sha256:92b8ca8d88a70fbbb8d0e7a4a05cbda7113b346c3a07bfb7df6342d9a0eca958"
+    },
+    {
+      "id": "backup_20261118_042853",
+      "name": "threatpulse_backup_20261118_042853.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261118_042853.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 212,
+      "timestamp": "2026-11-18T04:28:53.433479+00:00",
+      "status": "COMPLETED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": false,
+      "verifiedAt": null,
+      "restoreDurationSec": null,
+      "checksum": "sha256:e648e0070a864e5a160dc4998646f79c1b5269e44fb5a5ebe3ae9ee49ed1abe5"
+    },
+    {
+      "id": "backup_20261118_032837",
+      "name": "threatpulse_backup_20261118_032837.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261118_032837.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-18T03:28:37.804269+00:00",
+      "status": "COMPLETED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.062,
+      "verified": false,
+      "verifiedAt": null,
+      "restoreDurationSec": null,
+      "checksum": "sha256:d3571f3b4029070f0ebac873579c75a5ca951d4fddd164890cba88cdde8fbfac"
+    },
+    {
+      "id": "backup_20261117_091036",
+      "name": "threatpulse_backup_20261117_091036.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261117_091036.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-17T09:10:36.439991+00:00",
+      "status": "COMPLETED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": false,
+      "verifiedAt": null,
+      "restoreDurationSec": null,
+      "checksum": "sha256:16166132ed2671d5371b625d74462502abfdefb408118ec8c03738bfc57f253a"
+    },
+    {
+      "id": "backup_20261117_081028",
+      "name": "threatpulse_backup_20261117_081028.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261117_081028.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-17T08:10:28.284117+00:00",
+      "status": "COMPLETED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.685,
+      "verified": false,
+      "verifiedAt": null,
+      "restoreDurationSec": null,
+      "checksum": "sha256:b3b761784a676780f979da71c210e61dced51740f4996186fe7dfe6b6cbf6821"
+    },
+    {
+      "id": "backup_20261117_064859",
+      "name": "threatpulse_backup_20261117_064859.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261117_064859.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-17T06:48:59.851084+00:00",
+      "status": "COMPLETED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.073,
+      "verified": false,
+      "verifiedAt": null,
+      "restoreDurationSec": null,
+      "checksum": "sha256:f6f05d06d66dcccf37f2118e1f6ae24e8c12ec53352fb01001f15821489a8b1a"
+    },
+    {
+      "id": "backup_20261116_180907",
+      "name": "threatpulse_backup_20261116_180907.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261116_180907.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-16T18:09:07.710061+00:00",
+      "status": "COMPLETED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": false,
+      "verifiedAt": null,
+      "restoreDurationSec": null,
+      "checksum": "sha256:32b7e53aca30b76f1bc5f1197bd025637b75089a84cd1efb0858721dcdbdd3b4"
+    },
+    {
+      "id": "backup_20261116_170907",
+      "name": "threatpulse_backup_20261116_170907.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261116_170907.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-16T17:09:07.594587+00:00",
+      "status": "COMPLETED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": false,
+      "verifiedAt": null,
+      "restoreDurationSec": null,
+      "checksum": "sha256:4aa7c38bffdc263e65475493cc7381d480cc9382ae42fdc0540b67ca194bf8ae"
+    },
+    {
+      "id": "backup_20261116_160907",
+      "name": "threatpulse_backup_20261116_160907.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261116_160907.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-16T16:09:07.514058+00:00",
+      "status": "COMPLETED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": false,
+      "verifiedAt": null,
+      "restoreDurationSec": null,
+      "checksum": "sha256:40f6ab06153f9b72baa9ee4aadfbad3156b12d9054ea2f6eb89e816f4fc67d0a"
+    },
+    {
+      "id": "backup_20261116_145724",
+      "name": "threatpulse_backup_20261116_145724.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261116_145724.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 211,
+      "timestamp": "2026-11-16T14:57:24.220261+00:00",
+      "status": "COMPLETED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.02,
+      "verified": false,
+      "verifiedAt": null,
+      "restoreDurationSec": null,
+      "checksum": "sha256:5a69be0a64007c854236935eecb91f39ff483bf65ef8f455cc7b0e39c0146b67"
+    },
+    {
+      "id": "backup_20261116_134950",
+      "name": "threatpulse_backup_20261116_134950.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261116_134950.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 211,
+      "timestamp": "2026-11-16T13:49:50.695458+00:00",
+      "status": "COMPLETED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": false,
+      "verifiedAt": null,
+      "restoreDurationSec": null,
+      "checksum": "sha256:5e246c5fb31ae5aee3f6dbb55a7e4247ee14570490deb88a9002957de436d520"
+    },
+    {
+      "id": "backup_20261116_124944",
+      "name": "threatpulse_backup_20261116_124944.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261116_124944.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 211,
+      "timestamp": "2026-11-16T12:49:44.586433+00:00",
+      "status": "COMPLETED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 6.006,
+      "verified": false,
+      "verifiedAt": null,
+      "restoreDurationSec": null,
+      "checksum": "sha256:3b82728e328c26f00fcfec09aaaa418959e6343aafed68e549034de77983b3b9"
+    },
+    {
+      "id": "backup_20261116_103516",
+      "name": "threatpulse_backup_20261116_103516.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261116_103516.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-16T10:35:16.225977+00:00",
+      "status": "COMPLETED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.16,
+      "verified": false,
+      "verifiedAt": null,
+      "restoreDurationSec": null,
+      "checksum": "sha256:98ab3c472c5ea0e6075ceb7be6a28e6d74a49a07cd15af9ea0549b3ee397806d"
+    },
+    {
+      "id": "backup_20261116_091323",
+      "name": "threatpulse_backup_20261116_091323.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261116_091323.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-16T09:13:23.672094+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": true,
+      "verifiedAt": "2026-11-16T09:13:23.675295+00:00",
+      "restoreDurationSec": 0.01,
+      "checksum": "sha256:6a7c949282c1864c7e56902e7b8099579e62cb0b9d17d10c8ddb0c33ec6b8e95"
+    },
+    {
+      "id": "backup_20261116_091315",
+      "name": "threatpulse_backup_20261116_091315.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261116_091315.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 211,
+      "timestamp": "2026-11-16T09:13:15.682779+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": true,
+      "verifiedAt": "2026-11-16T09:13:15.685712+00:00",
+      "restoreDurationSec": 0.01,
+      "checksum": "sha256:4b081e299b968164eb3cbddcfd91f0943d1b8f48653f6d9e6c0d5164e76d04d7"
+    },
+    {
+      "id": "backup_20261116_091242",
+      "name": "threatpulse_backup_20261116_091242.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261116_091242.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-16T09:12:42.596469+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": true,
+      "verifiedAt": "2026-11-16T09:12:42.621895+00:00",
+      "restoreDurationSec": 0.01,
+      "checksum": "sha256:8145296f5d96969177897a3fd26f733daa96ceb761b6c901d57144a51af7161a"
+    },
+    {
+      "id": "backup_20261116_084449",
+      "name": "threatpulse_backup_20261116_084449.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261116_084449.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 211,
+      "timestamp": "2026-11-16T08:44:49.530933+00:00",
+      "status": "COMPLETED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": false,
+      "verifiedAt": null,
+      "restoreDurationSec": null,
+      "checksum": "sha256:489d97965ff9d1f4828853b35284f9e84c8cd4b2b2f7d1aca43f715e40675e14"
+    },
+    {
+      "id": "backup_20261115_133344",
+      "name": "threatpulse_backup_20261115_133344.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261115_133344.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 211,
+      "timestamp": "2026-11-15T13:33:44.197608+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": true,
+      "verifiedAt": "2026-11-15T13:33:44.200002+00:00",
+      "restoreDurationSec": 0.01,
+      "checksum": "sha256:03f699ad91d459e40d916dd686b2ea36dda7e88d0a5cc6cbae0796c910f668c4"
+    },
+    {
+      "id": "backup_20261115_133336",
+      "name": "threatpulse_backup_20261115_133336.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261115_133336.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 212,
+      "timestamp": "2026-11-15T13:33:36.238747+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": true,
+      "verifiedAt": "2026-11-15T13:33:36.243555+00:00",
+      "restoreDurationSec": 0.01,
+      "checksum": "sha256:04c7f6cc091017786a07530197b55a7bc02fa02722e05be1b121db21cb387852"
+    },
+    {
+      "id": "backup_20261115_133259",
+      "name": "threatpulse_backup_20261115_133259.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261115_133259.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-15T13:32:59.138526+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": true,
+      "verifiedAt": "2026-11-15T13:32:59.146749+00:00",
+      "restoreDurationSec": 0.01,
+      "checksum": "sha256:e8e8c65964a0cc73d1f8b5432c941299c1a37a86469bc37742422b4f175139b0"
+    },
+    {
+      "id": "backup_20261115_130642",
+      "name": "threatpulse_backup_20261115_130642.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261115_130642.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 211,
+      "timestamp": "2026-11-15T13:06:42.179369+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": true,
+      "verifiedAt": "2026-11-15T13:06:42.182009+00:00",
+      "restoreDurationSec": 0.01,
+      "checksum": "sha256:c159f25afb42ea683abea10ee880dae88a2323ccd5d8824597029f3f327112f6"
+    },
+    {
+      "id": "backup_20261115_130634",
+      "name": "threatpulse_backup_20261115_130634.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261115_130634.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-15T13:06:34.154360+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": true,
+      "verifiedAt": "2026-11-15T13:06:34.157046+00:00",
+      "restoreDurationSec": 0.01,
+      "checksum": "sha256:3ba3dd07f8c63a6fde3c472f92bee9a5c941dcc34e9c65df965d3973aef08e60"
+    },
+    {
+      "id": "backup_20261115_130600",
+      "name": "threatpulse_backup_20261115_130600.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261115_130600.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 211,
+      "timestamp": "2026-11-15T13:06:00.809576+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": true,
+      "verifiedAt": "2026-11-15T13:06:00.818094+00:00",
+      "restoreDurationSec": 0.01,
+      "checksum": "sha256:9e0f4d41c32fa4b98b4709dbc1ff9f3031a27f21cdd6c74f2f96cefdcd374293"
+    },
+    {
+      "id": "backup_20261115_104644",
+      "name": "threatpulse_backup_20261115_104644.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261115_104644.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-15T10:46:44.095768+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": true,
+      "verifiedAt": "2026-11-15T10:46:44.097661+00:00",
+      "restoreDurationSec": 0.01,
+      "checksum": "sha256:238ccc5bd6394f1aed9786bc452261a736ac2218bc0e94a64044c18c7b75d629"
+    },
+    {
+      "id": "backup_20261115_104620",
+      "name": "threatpulse_backup_20261115_104620.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261115_104620.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-15T10:46:20.195945+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": true,
+      "verifiedAt": "2026-11-15T10:46:20.199425+00:00",
+      "restoreDurationSec": 0.01,
+      "checksum": "sha256:4b37cbcf134778bd38084a658f2f7573d3c51a2707b9a50c0207292a30d7c963"
+    },
+    {
+      "id": "backup_20261115_104429",
+      "name": "threatpulse_backup_20261115_104429.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261115_104429.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 209,
+      "timestamp": "2026-11-15T10:44:29.140720+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": true,
+      "verifiedAt": "2026-11-15T10:44:29.148915+00:00",
+      "restoreDurationSec": 0.01,
+      "checksum": "sha256:5ebf14187d419d4c7bec91fc03ffb88e759dcff191dbba2990dd3fd79af2b555"
+    },
+    {
+      "id": "backup_20261115_100442",
+      "name": "threatpulse_backup_20261115_100442.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261115_100442.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-15T10:04:42.811451+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": true,
+      "verifiedAt": "2026-11-15T10:04:42.814501+00:00",
+      "restoreDurationSec": 0.01,
+      "checksum": "sha256:6b1c229d6b578a35c9942371dc0bb06b2b864f80f41d99d898fe9ae1b6a61fcb"
+    },
+    {
+      "id": "backup_20261115_100434",
+      "name": "threatpulse_backup_20261115_100434.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261115_100434.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 212,
+      "timestamp": "2026-11-15T10:04:34.877445+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": true,
+      "verifiedAt": "2026-11-15T10:04:34.884779+00:00",
+      "restoreDurationSec": 0.01,
+      "checksum": "sha256:eac430eb92acb8dbbecdcf167b340dfe0484bc29a837d6d10a8edb0a8ee9f2ee"
+    },
+    {
+      "id": "backup_20261115_100401",
+      "name": "threatpulse_backup_20261115_100401.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261115_100401.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 211,
+      "timestamp": "2026-11-15T10:04:01.563716+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": true,
+      "verifiedAt": "2026-11-15T10:04:01.581450+00:00",
+      "restoreDurationSec": 0.01,
+      "checksum": "sha256:a105fc3b16ddeb3309f3d65be36c31ae9b052bd5666da93678efca65a3225917"
+    },
+    {
+      "id": "backup_20261114_215039",
+      "name": "threatpulse_backup_20261114_215039.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261114_215039.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-14T21:50:39.303448+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": true,
+      "verifiedAt": "2026-11-14T21:50:39.306390+00:00",
+      "restoreDurationSec": 0.01,
+      "checksum": "sha256:b2a8e932ca57cb2bc4f97dcb6faebdd2cbc29e92e99a1b63e7166aca7805b109"
+    },
+    {
+      "id": "backup_20261114_215031",
+      "name": "threatpulse_backup_20261114_215031.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261114_215031.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-14T21:50:31.352481+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": true,
+      "verifiedAt": "2026-11-14T21:50:31.355501+00:00",
+      "restoreDurationSec": 0.01,
+      "checksum": "sha256:0b91fde687444dab0d397c5a84726fb1ef6d9db4cb4cd7636f895f0af1179b71"
+    },
+    {
+      "id": "backup_20261114_214958",
+      "name": "threatpulse_backup_20261114_214958.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261114_214958.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 212,
+      "timestamp": "2026-11-14T21:49:58.672834+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": true,
+      "verifiedAt": "2026-11-14T21:49:58.683481+00:00",
+      "restoreDurationSec": 0.01,
+      "checksum": "sha256:de6f68793fcb896a68f180aebff04c97704efe55f878c01dc8fa00d9955f4f3e"
+    },
+    {
+      "id": "backup_20261114_212405",
+      "name": "threatpulse_backup_20261114_212405.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261114_212405.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 209,
+      "timestamp": "2026-11-14T21:24:05.010485+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": true,
+      "verifiedAt": "2026-11-14T21:24:05.016828+00:00",
+      "restoreDurationSec": 0.01,
+      "checksum": "sha256:160dfbea6544878411d8459da47a1eb198805e6c697bdb689c9ea95cb92bdcd3"
+    },
+    {
+      "id": "backup_20261114_212356",
+      "name": "threatpulse_backup_20261114_212356.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261114_212356.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-14T21:23:56.739051+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": true,
+      "verifiedAt": "2026-11-14T21:23:56.762879+00:00",
+      "restoreDurationSec": 0.01,
+      "checksum": "sha256:6ca96d9175e3fd1aead2d9c4ff84f9ea199a0dc2b653f33745ec036605562c86"
+    },
+    {
+      "id": "backup_20261114_212323",
+      "name": "threatpulse_backup_20261114_212323.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261114_212323.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-14T21:23:23.970717+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.01,
+      "verified": true,
+      "verifiedAt": "2026-11-14T21:23:23.979633+00:00",
+      "restoreDurationSec": 0.01,
+      "checksum": "sha256:0f615cffcff1f7d1e9ab617e8f9377b076041c00d27dd02918546578f7e36c7b"
+    },
+    {
+      "id": "backup_20261114_212103",
+      "name": "threatpulse_backup_20261114_212103.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261114_212103.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-14T21:21:03.162169+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.001,
+      "verified": true,
+      "verifiedAt": "2026-11-14T21:21:03.164653+00:00",
+      "restoreDurationSec": 0.0,
+      "checksum": "sha256:b1db5bf17fa163fa83c46809ddd9bf130c7ef2356d56c9a55670b7c158930a25"
+    },
+    {
+      "id": "backup_20261114_212055",
+      "name": "threatpulse_backup_20261114_212055.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261114_212055.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-14T21:20:55.234761+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.001,
+      "verified": true,
+      "verifiedAt": "2026-11-14T21:20:55.236994+00:00",
+      "restoreDurationSec": 0.0,
+      "checksum": "sha256:4aa03cb65588ba2a53655a3624ad766e0cd612bb732b3bdd44e809e5698c6b8b"
+    },
+    {
+      "id": "backup_20261114_212022",
+      "name": "threatpulse_backup_20261114_212022.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261114_212022.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 209,
+      "timestamp": "2026-11-14T21:20:22.418688+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.001,
+      "verified": true,
+      "verifiedAt": "2026-11-14T21:20:22.425790+00:00",
+      "restoreDurationSec": 0.0,
+      "checksum": "sha256:bb5fc7461dc7455b7cb47e57a219301c38aa273da9c3b83f10556e1a710f192f"
+    },
+    {
+      "id": "backup_20261114_211930",
+      "name": "threatpulse_backup_20261114_211930.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261114_211930.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-14T21:19:30.524840+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.001,
+      "verified": true,
+      "verifiedAt": "2026-11-14T21:19:30.526586+00:00",
+      "restoreDurationSec": 0.0,
+      "checksum": "sha256:53dda650ba3a511386128d6a1dda1b32e5de0e2ebec054bdcb5ce833e1962dd2"
+    },
+    {
+      "id": "backup_20261114_211922",
+      "name": "threatpulse_backup_20261114_211922.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261114_211922.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 210,
+      "timestamp": "2026-11-14T21:19:22.502669+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.001,
+      "verified": true,
+      "verifiedAt": "2026-11-14T21:19:22.504412+00:00",
+      "restoreDurationSec": 0.0,
+      "checksum": "sha256:bf90fc6aa6b5fe675288a0335fb22bd4dc98c796713701c371bc198ed6ee75d3"
+    },
+    {
+      "id": "backup_20261114_211849",
+      "name": "threatpulse_backup_20261114_211849.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261114_211849.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 211,
+      "timestamp": "2026-11-14T21:18:49.725731+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "system_config": 2
+      },
+      "documentsCount": 2,
+      "durationSec": 0.003,
+      "verified": true,
+      "verifiedAt": "2026-11-14T21:18:49.737443+00:00",
+      "restoreDurationSec": 0.001,
+      "checksum": "sha256:0bc42c7329b0fc47956165c81b6656a82bbcc269e5aba7d4dd77044113a84137"
+    },
+    {
+      "id": "backup_20261114_210725",
+      "name": "threatpulse_backup_20261114_210725.archive.gz",
+      "path": "C:\\Users\\Jainish pachori\\Downloads\\MongoDB_Combined_Docker_Pipeline_NoSeed\\MongoDB_Combined_Docker_Pipeline\\backups\\threatpulse_backup_20261114_210725.archive.gz",
+      "sizeMB": 0.0,
+      "sizeBytes": 63,
+      "timestamp": "2026-11-14T21:07:25.979199+00:00",
+      "status": "VERIFIED",
+      "collections": {
+        "users": 0,
+        "sessions": 0
+      },
+      "documentsCount": 0,
+      "durationSec": 0.016,
+      "verified": true,
+      "verifiedAt": "2026-11-14T21:07:26.025645+00:00",
+      "restoreDurationSec": 0.002,
+      "checksum": "sha256:0cb71bbb7b8599d763137d56e09343a74774c927016d617813a81f593cd9a595"
+    }
+  ]
+}

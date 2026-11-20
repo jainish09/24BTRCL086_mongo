@@ -1,0 +1,7 @@
+# Environment secrets
+.env
+**/.env
+# Python caches
+__pycache__/
+*.py[cod]
+# Local generated outputs can be large or machine-specific

@@ -1,0 +1,207 @@
+name: chapter13-containers-cloud
+
+services:
+  # --------------------------------------------------------------------------
+  # 1. MongoDB Replica Set (rs0) - 3 Nodes
+  # --------------------------------------------------------------------------
+  mongo1:
+    image: mongo:7.0
+    container_name: lab13-mongo1
+    hostname: mongo1
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
+    ports:
+      - "27020:27017"
+    volumes:
+      - mongo1_data:/data/db
+    networks:
+      lab13-net:
+        aliases:
+          - mongo1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mongo2:
+    image: mongo:7.0
+    container_name: lab13-mongo2
+    hostname: mongo2
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo2_data:/data/db
+    networks:
+      lab13-net:
+        aliases:
+          - mongo2
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mongo3:
+    image: mongo:7.0
+    container_name: lab13-mongo3
+    hostname: mongo3
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
+    ports:
+      - "27019:27017"
+    volumes:
+      - mongo3_data:/data/db
+    networks:
+      lab13-net:
+        aliases:
+          - mongo3
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Replica set initiator
+  rs-init:
+    image: mongo:7.0
+    container_name: lab13-rs-init
+    depends_on:
+      mongo1:
+        condition: service_healthy
+      mongo2:
+        condition: service_healthy
+      mongo3:
+        condition: service_healthy
+    networks:
+      - lab13-net
+    entrypoint: >
+      bash -c '
+      echo "Initiating Replica Set rs0...";
+      mongosh --host mongo1:27017 --eval "
+        try {
+          rs.status();
+          console.log(\"Replica set rs0 already initiated.\");
+        } catch (e) {
+          rs.initiate({
+            _id: \"rs0\",
+            members: [
+              { _id: 0, host: \"mongo1:27017\", priority: 2 },
+              { _id: 1, host: \"mongo2:27017\", priority: 1 },
+              { _id: 2, host: \"mongo3:27017\", priority: 1 }
+            ]
+          });
+          console.log(\"Replica set rs0 initiated successfully.\");
+        }
+      ";
+      '
+    restart: "no"
+
+  # --------------------------------------------------------------------------
+  # 2. MongoDB Prometheus Exporter (Port 9216)
+  # --------------------------------------------------------------------------
+  mongodb-exporter:
+    image: percona/mongodb_exporter:0.40.0
+    container_name: lab13-mongodb-exporter
+    command:
+      - "--mongodb.uri=mongodb://mongo1:27017,mongo2:27017,mongo3:27017/?replicaSet=rs0"
+      - "--collect-all"
+      - "--compatible-mode"
+    ports:
+      - "9216:9216"
+    networks:
+      - lab13-net
+    depends_on:
+      - mongo1
+      - mongo2
+      - mongo3
+    restart: unless-stopped
+
+  # --------------------------------------------------------------------------
+  # 3. Prometheus Monitoring Engine (Port 9090)
+  # --------------------------------------------------------------------------
+  prometheus:
+    image: prom/prometheus:v2.50.1
+    container_name: lab13-prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.enable-lifecycle"
+      - "--storage.tsdb.retention.time=15d"
+    ports:
+      - "9090:9090"
+    networks:
+      - lab13-net
+    restart: unless-stopped
+
+  # --------------------------------------------------------------------------
+  # 4. Grafana SOC Dashboards (Port 3013)
+  # --------------------------------------------------------------------------
+  grafana:
+    image: grafana/grafana:10.3.3
+    container_name: lab13-grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=AdminPass2026!
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_HTTP_PORT=3013
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./grafana/dashboards:/etc/grafana/dashboards:ro
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3013:3013"
+    networks:
+      - lab13-net
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+  # --------------------------------------------------------------------------
+  # 5. ThreatPulse Chapter 13 FastAPI Application (Port 8080)
+  # --------------------------------------------------------------------------
+  backend:
+    build:
+      context: ..
+      dockerfile: ./chapter-13/Dockerfile
+    container_name: lab13-threatpulse-backend
+    environment:
+      - MONGODB_URI=mongodb://mongo1:27017,mongo2:27017,mongo3:27017/?replicaSet=rs0
+      - DB_NAME=threat_intel_db
+      - COLLECTION_NAME=threat_reports
+      - PROMETHEUS_URL=http://prometheus:9090
+      - GRAFANA_URL=http://grafana:3013
+      - PORT=8080
+      - HOST=0.0.0.0
+      - ADMIN_API_KEY=threatpulse-soc-admin-secret-2026
+    ports:
+      - "8080:8080"
+    networks:
+      - lab13-net
+    depends_on:
+      - mongo1
+      - mongo2
+      - mongo3
+      - prometheus
+    restart: unless-stopped
+
+networks:
+  lab13-net:
+    driver: bridge
+    name: chapter13-cloud-net
+
+volumes:
+  mongo1_data:
+  mongo2_data:
+  mongo3_data:
+  prometheus_data:
+  grafana_data:
+

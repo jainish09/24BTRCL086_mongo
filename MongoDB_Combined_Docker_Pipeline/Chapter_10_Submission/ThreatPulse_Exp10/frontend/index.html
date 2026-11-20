@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ThreatPulse SOC - Exp 10 Multi-Document Transactions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Top Navigation & SOC Header -->
+  <header class="header">
+    <div class="brand">
+      <div class="brand-icon">&#x1F6E1;</div>
+      <div class="brand-text">
+        <h1>ThreatPulse SOC <span class="badge-exp">EXP 10: TRANSACTIONS</span></h1>
+      </div>
+    </div>
+
+    <div class="header-center">
+      <div class="replica-status">
+        <span class="status-dot"></span>
+        <span id="replica-status-label">Replica Set: <strong>rs0</strong> (mongo2:27017 [PRIMARY])</span>
+      </div>
+
+      <div class="demo-switcher">
+        <span>Active Analyst:</span>
+        <select id="demo-user-select" class="demo-select"></select>
+      </div>
+    </div>
+
+    <div class="header-user-hud">
+      <!-- Signed In State -->
+      <div id="hud-auth-container" style="display: flex; align-items: center; gap: 0.65rem;">
+        <div class="hud-pill wallet">
+          <span>&#x1F4B3;</span>
+          <span id="hud-wallet-balance">$35.00</span>
+          <button id="btn-hud-topup" class="btn-topup">+ Fund</button>
+        </div>
+
+        <div class="hud-pill credits">
+          <span>&#x26A1;</span>
+          <span id="hud-credit-balance">50 Credits</span>
+        </div>
+
+        <div id="hud-plan-badge" class="hud-pill tier">Community Free</div>
+
+        <div style="display: flex; align-items: center; gap: 0.4rem; padding-left: 0.25rem;">
+          <div id="hud-user-avatar" class="avatar-circle">AV</div>
+          <span id="hud-user-name" style="font-size: 0.85rem; font-weight: 600;">Alex Vance</span>
+        </div>
+
+        <button id="btn-header-logout" class="btn btn-sm btn-danger" style="width: auto; padding: 0.3rem 0.75rem; font-size: 0.8rem; display: inline-flex;" title="Sign out of current account">
+          &#x238B; Sign Out
+        </button>
+      </div>
+
+      <!-- Signed Out / Guest State -->
+      <div id="hud-guest-container" style="display: none; align-items: center; gap: 0.75rem;">
+        <span style="font-size: 0.85rem; color: var(--text-muted);">Guest Mode</span>
+        <button id="btn-header-login" class="btn btn-sm btn-primary" style="width: auto; padding: 0.4rem 1rem; font-size: 0.825rem; font-weight: 700;">
+          &#x1F511; Sign In / Register
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs Bar -->
+  <nav class="nav-tabs-bar">
+    <button class="tab-btn active" data-tab="tab-overview">
+      <span>&#x1F4E1; Threat Feed</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-plans">
+      <span>&#x1F4B0; Plans & Pricing</span>
+      <span class="badge-tag hot">UPGRADE</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-features">
+      <span>&#x1F527; Paid SOC Tools</span>
+      <span class="badge-tag txn">STOCK QUOTA</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-transfers">
+      <span>&#x1F91D; P2P Transfer</span>
+      <span class="badge-tag txn">BANK ATOMICITY</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-txnlab">
+      <span>&#x2697; Transaction Lab</span>
+      <span class="badge-tag hot">ACID SANDBOX</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-invoices">
+      <span>&#x1F9FE; Invoices & Receipts</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-admin">
+      <span>&#x1F4CA; Financial Audit</span>
+      <span class="badge-tag txn">&#10003; CONSERVATION</span>
+    </button>
+  </nav>
+
+  <!-- Main Content Areas -->
+  <main class="main-content">
+
+    <!-- 1. Threat Feed Tab -->
+    <div id="tab-overview" class="tab-pane active">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <div>
+          <h2 style="font-size: 1.5rem; font-weight: 700;">Cyber Threat Intelligence Stream</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem;">Live global adversary activity, ransomware IOCs, and MITRE ATT&CK techniques.</p>
+        </div>
+      </div>
+      <div id="threat-feed-container"></div>
+    </div>
+
+    <!-- 2. Plans & Subscription Checkout Tab -->
+    <div id="tab-plans" class="tab-pane">
+      <div style="text-align: center; max-width: 700px; margin: 0 auto 2.5rem;">
+        <span class="badge-tag txn" style="font-size: 0.8rem; padding: 0.25rem 0.75rem;">TRANSACTIONAL SUBSCRIPTION PRODUCT</span>
+        <h2 style="font-size: 2rem; font-weight: 800; margin: 0.5rem 0;">Upgrade Your SOC Intelligence Tier</h2>
+        <p style="color: var(--text-secondary); font-size: 0.95rem;">Every plan change is executed as an atomic MongoDB multi-document transaction across replica set rs0: user wallet debit, platform credit, coupon decrement, plan activation, and ledger entries commit simultaneously.</p>
+      </div>
+
+      <div id="plans-cards-grid" class="grid-cols-3"></div>
+    </div>
+
+    <!-- 3. Paid SOC Tools Tab -->
+    <div id="tab-features" class="tab-pane">
+      <div style="margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 700;">Paid Threat Intelligence Tools</h2>
+        <p style="color: var(--text-muted); font-size: 0.85rem;">Usage deducts credits from your balance and atomically reserves daily stock inventory slots.</p>
+      </div>
+
+      <div class="grid-cols-2">
+        <!-- VirusTotal Live Scan Card -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">&#x1F50E; VirusTotal Multi-Engine Scanner</h3>
+              <div class="card-subtitle">5 Credits / Scan • Limited Daily API Quota</div>
+            </div>
+            <span class="badge-tag txn">PART 10.2 QUOTA</span>
+          </div>
+
+          <div class="quota-bar-wrapper">
+            <div class="quota-bar-labels">
+              <span>Daily API Quota Capacity</span>
+              <span id="vt-quota-label">100 / 100 Slots Remaining</span>
+            </div>
+            <div class="quota-bar">
+              <div id="vt-quota-fill" class="quota-bar-fill" style="width: 100%;"></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Target Observable (IP, Domain, File Hash):</label>
+            <input type="text" id="vt-target-input" class="form-input" value="194.26.29.112" placeholder="e.g. 194.26.29.112 or malicious-cdn.com">
+          </div>
+
+          <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem;">
+            <input type="checkbox" id="vt-sim-crash-check" style="cursor: pointer;">
+            <label for="vt-sim-crash-check" style="font-size: 0.8rem; color: var(--accent-rose); cursor: pointer;">
+              Simulate mid-transaction API timeout (Verify full credit & quota rollback)
+            </label>
+          </div>
+
+          <button id="btn-run-vt-scan" class="btn btn-primary">
+            Execute VT Scan (5 Credits) &rarr;
+          </button>
+
+          <div id="vt-output" style="margin-top: 1rem;"></div>
+        </div>
+
+        <!-- Threat Verifier Card -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">&#x2714; Threat Verifier (Instant Truth)</h3>
+              <div class="card-subtitle">3 Credits / Query • Real-Time CTI Cross-Reference</div>
+            </div>
+            <span class="badge-tag txn">EXP 7 VERIFIER</span>
+          </div>
+
+          <div class="form-group" style="margin-top: 1rem;">
+            <label class="form-label">Indicator to Cross-Reference:</label>
+            <input type="text" id="verifier-ioc-input" class="form-input" value="telemetry-sync-cdn.net">
+          </div>
+
+          <button id="btn-run-verifier" class="btn btn-secondary">
+            Verify IOC Against Threat Graph (3 Credits) &rarr;
+          </button>
+
+          <div id="verifier-output" style="margin-top: 1rem;"></div>
+
+          <hr style="border-color: rgba(255,255,255,0.06); margin: 1.5rem 0;">
+
+          <!-- IOC Batch Export -->
+          <div>
+            <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.35rem;">Deep IOC Stream Batch Export</div>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;">Export entire CTI indicator feed in JSON format (Costs 2 Credits).</p>
+            <button id="btn-run-ioc-export" class="btn btn-secondary">
+              Export Observable Feed (2 Credits) &rarr;
+            </button>
+            <div id="export-output" style="margin-top: 0.75rem;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. P2P Credit Transfer Tab -->
+    <div id="tab-transfers" class="tab-pane">
+      <div style="max-width: 700px; margin: 0 auto;">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">&#x1F91D; Peer-to-Peer Analyst Credit Transfer</h3>
+              <div class="card-subtitle">Experiment 10.1 Bank Transfer Atomicity Model</div>
+            </div>
+            <span class="badge-tag txn">10.1 BANK TRANSFER</span>
+          </div>
+
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+            Transfer feature credits directly to another analyst for collaborative incident investigation. Both sender debit, receiver credit, and dual audit ledgers commit in ONE atomic transaction. If the recipient does not exist, the transaction aborts and 0 credits are deducted!
+          </p>
+
+          <div class="form-group">
+            <label class="form-label">Recipient Analyst Email:</label>
+            <input type="email" id="p2p-recipient-input" class="form-input" placeholder="e.g. analyst@threatpulse.io">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Credits to Transfer:</label>
+            <input type="number" id="p2p-amount-input" class="form-input" value="50" min="1" max="1000">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Investigation Memo:</label>
+            <input type="text" id="p2p-memo-input" class="form-input" value="Joint triage of Volt Typhoon C2 node">
+          </div>
+
+          <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem;">
+            <button id="btn-send-transfer" class="btn btn-primary" style="flex: 2;">
+              Send Credits (Atomic Transaction) &rarr;
+            </button>
+            <button id="btn-transfer-ghost-preset" class="btn btn-danger" style="flex: 1;" title="Test transfer to unknown recipient">
+              Test Unknown Rollback
+            </button>
+          </div>
+
+          <div id="p2p-output"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Transaction Lab Sandbox Tab -->
+    <div id="tab-txnlab" class="tab-pane">
+      <div style="margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 700;">Experiment 10: Academic ACID Sandbox</h2>
+        <p style="color: var(--text-muted); font-size: 0.85rem;">Interactive side-by-side verification of all 4 required parts of the Experiment 10 rubric.</p>
+      </div>
+
+      <div class="grid-cols-2">
+        <!-- 10.1 Bank Transfer Atomicity Sandbox -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">10.1 Bank Transfer Atomicity</h3>
+              <div class="card-subtitle">Mid-Operation Network Crash Simulation</div>
+            </div>
+            <span class="badge-tag hot">PART 10.1</span>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+            Tests what happens when a server crashes immediately after debiting sender but before crediting receiver:
+          </p>
+          <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem;">
+            <button id="btn-sim-non-txn" class="btn btn-danger">
+              Run Without Transaction (Watch Money Vanish!)
+            </button>
+            <button id="btn-sim-txn" class="btn btn-primary">
+              Run With Transaction (100% Rollback)
+            </button>
+          </div>
+          <div id="transfer-lab-output"></div>
+        </div>
+
+        <!-- 10.2 Anti-Overselling Inventory Sandbox -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">10.2 Inventory Reservation</h3>
+              <div class="card-subtitle">Anti-Overselling Race Condition Simulator</div>
+            </div>
+            <span class="badge-tag txn">PART 10.2</span>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+            Fires 15 concurrent threads competing to reserve from a pool of only 5 stock items:
+          </p>
+          <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem;">
+            <button id="btn-oversell-non-txn" class="btn btn-secondary">
+              Non-Transactional (Race Condition)
+            </button>
+            <button id="btn-oversell-txn" class="btn btn-primary">
+              Transactional (Atomic Guard)
+            </button>
+          </div>
+          <div id="oversell-lab-output"></div>
+        </div>
+
+        <!-- 10.1-try WriteConflict Retry Sandbox -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">10.1-try Write Conflict Retry</h3>
+              <div class="card-subtitle">TransientTransactionError with Exponential Backoff</div>
+            </div>
+            <span class="badge-tag txn">PART 10.1-TRY</span>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+            Induces overlapping concurrent writes to the same document, triggering MongoDB error code 112 (WriteConflict) and verifies backoff retry:
+          </p>
+          <button id="btn-sim-retry" class="btn btn-secondary" style="margin-bottom: 1rem;">
+            Induce Write Conflict & Retry &rarr;
+          </button>
+          <div id="retry-lab-output"></div>
+        </div>
+
+        <!-- 10.2-bench Throughput Benchmark Sandbox -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">10.2-bench Throughput Benchmark</h3>
+              <div class="card-subtitle">Multi-Worker Latency & Ops/Sec Comparison</div>
+            </div>
+            <span class="badge-tag txn">PART 10.2-BENCH</span>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+            Benchmarks 1, 2, and 4 parallel worker threads comparing Transactions vs Direct Writes:
+          </p>
+          <button id="btn-run-benchmark" class="btn btn-primary" style="margin-bottom: 1rem;">
+            Run Throughput Benchmark &rarr;
+          </button>
+          <div id="benchmark-lab-output"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Invoices & Receipts Tab -->
+    <div id="tab-invoices" class="tab-pane">
+      <div style="margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 700;">Printable Invoices & Audit Receipts</h2>
+        <p style="color: var(--text-muted); font-size: 0.85rem;">Cryptographic transaction records generated automatically upon plan upgrades.</p>
+      </div>
+      <div id="invoices-container"></div>
+    </div>
+
+    <!-- 7. Admin & Mathematical Audit Tab -->
+    <div id="tab-admin" class="tab-pane">
+      <div style="margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 700;">SOC Director Accounting & Revenue Audit</h2>
+        <p style="color: var(--text-muted); font-size: 0.85rem;">Platform financial health, realized revenue, and mathematical proof of money conservation.</p>
+      </div>
+
+      <div class="grid-cols-3" style="margin-bottom: 1.5rem;">
+        <div class="card">
+          <div style="font-size: 0.8rem; color: var(--text-muted);">Realized Platform Revenue</div>
+          <div id="admin-platform-revenue" style="font-size: 2rem; font-weight: 800; font-family: var(--font-mono); color: var(--accent-emerald);">$0.00</div>
+          <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;">Stored in SYSTEM_PLATFORM_ACCOUNT</div>
+        </div>
+
+        <div class="card">
+          <div style="font-size: 0.8rem; color: var(--text-muted);">Monthly Recurring Revenue (MRR)</div>
+          <div id="admin-mrr" style="font-size: 2rem; font-weight: 800; font-family: var(--font-mono); color: var(--accent-cyan);">$0.00</div>
+          <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;">Active subscriber annualized rate</div>
+        </div>
+
+        <div class="card">
+          <div style="font-size: 0.8rem; color: var(--text-muted);">Active Subscribed Analysts</div>
+          <div id="admin-subscribers" style="font-size: 2rem; font-weight: 800; font-family: var(--font-mono); color: var(--accent-purple);">0 Users</div>
+          <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;">Community, Analyst, and Enterprise</div>
+        </div>
+      </div>
+
+      <div id="admin-audit-results"></div>
+    </div>
+
+  </main>
+
+  <!-- Modals -->
+
+  <!-- 1. Checkout Modal -->
+  <div id="checkout-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">Upgrade Plan</h3>
+          <div class="card-subtitle">Atomic Transactional Checkout</div>
+        </div>
+        <button class="modal-close">&times;</button>
+      </div>
+
+      <div style="background: #1e293b; padding: 1rem; border-radius: 8px; margin-bottom: 1.25rem;">
+        <div style="display: flex; justify-content: space-between; font-weight: 700;">
+          <span id="modal-plan-name">Analyst Plan</span>
+          <span id="modal-plan-price">$29.00</span>
+        </div>
+        <div id="modal-plan-credits" style="font-size: 0.8rem; color: var(--accent-amber); margin-top: 0.25rem;">+500 Feature Credits</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Promotional Coupon Code:</label>
+        <div style="display: flex; gap: 0.5rem;">
+          <input type="text" id="checkout-coupon-input" class="form-input" placeholder="e.g. CYBER50, THREAT20, ZERODAY100" style="text-transform: uppercase;">
+          <button id="btn-apply-coupon" class="btn btn-secondary" style="width: auto; padding: 0 1.25rem;">Apply</button>
+        </div>
+      </div>
+
+      <div id="checkout-discount-row" style="display: none; justify-content: space-between; font-size: 0.85rem; color: var(--accent-emerald); margin-bottom: 1rem;">
+        <span>Discount Applied:</span>
+        <strong id="modal-discount-val">-$14.50</strong>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 1rem; margin-bottom: 1.25rem;">
+        <span style="font-size: 1.1rem; font-weight: 700;">Total Charged:</span>
+        <span id="modal-final-price" style="font-size: 1.5rem; font-weight: 800; font-family: var(--font-mono); color: var(--accent-cyan);">$29.00</span>
+      </div>
+
+      <div id="checkout-error-msg" style="color: var(--accent-rose); font-size: 0.85rem; margin-bottom: 1rem;"></div>
+
+      <div style="display: flex; gap: 0.75rem;">
+        <button class="btn btn-secondary btn-modal-cancel">Cancel</button>
+        <button id="btn-confirm-subscription" class="btn btn-primary">Confirm & Execute Transaction</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Wallet Top-Up Modal -->
+  <div id="topup-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">Fund Analyst Wallet</h3>
+          <div class="card-subtitle">Instant Balance Top-Up via MongoDB Transaction</div>
+        </div>
+        <button class="modal-close">&times;</button>
+      </div>
+
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+        Select an amount to deposit into your platform wallet:
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-bottom: 1.5rem;">
+        <button class="btn btn-secondary btn-topup-preset" data-amount="10">+$10</button>
+        <button class="btn btn-secondary btn-topup-preset" data-amount="25">+$25</button>
+        <button class="btn btn-secondary btn-topup-preset" data-amount="50">+$50</button>
+        <button class="btn btn-secondary btn-topup-preset" data-amount="100">+$100</button>
+      </div>
+
+      <button class="btn btn-secondary btn-modal-cancel">Close</button>
+    </div>
+  </div>
+
+  <!-- 3. Receipt Timeline Modal -->
+  <div id="receipt-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">Transaction Receipt</h3>
+          <div class="card-subtitle">Audited MongoDB Multi-Document Execution</div>
+        </div>
+        <button class="modal-close">&times;</button>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; font-family: var(--font-mono); font-size: 0.8rem;">
+        <div>Receipt ID: <strong id="rcpt-id" style="color: var(--accent-cyan);">--</strong></div>
+        <div id="rcpt-status" class="badge-tag txn">COMMITTED</div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+        <span>Type: <strong id="rcpt-type" style="color: var(--text-primary);">--</strong></span>
+        <span>Duration: <strong id="rcpt-duration" style="color: var(--text-primary);">--</strong></span>
+      </div>
+
+      <div id="rcpt-timeline-list" class="receipt-timeline"></div>
+
+      <div style="display: flex; gap: 0.75rem; margin-top: 1.25rem;">
+        <button class="btn btn-primary" onclick="window.print()">Print Receipt / PDF</button>
+        <button class="btn btn-secondary btn-modal-cancel">Dismiss</button>
+      </div>
+  <!-- 4. Authentication Modal (Sign In / Register / Quick Login) -->
+  <div id="auth-modal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 520px;">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">&#x1F510; SOC Analyst Access</h3>
+          <div class="card-subtitle">Authenticate to access paid transactional intelligence tools</div>
+        </div>
+        <button class="modal-close">&times;</button>
+      </div>
+
+      <!-- Auth Tab Buttons -->
+      <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+        <button id="auth-tab-btn-login" class="tab-btn active" style="padding: 0.4rem 1rem;">Sign In</button>
+        <button id="auth-tab-btn-register" class="tab-btn" style="padding: 0.4rem 1rem;">Create New Account</button>
+      </div>
+
+      <!-- Sign In Form -->
+      <form id="form-login">
+        <div class="form-group">
+          <label class="form-label">Analyst Email Address:</label>
+          <input type="email" id="login-email-input" class="form-input" placeholder="e.g. free@threatpulse.io" value="free@threatpulse.io" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Password:</label>
+          <input type="password" id="login-password-input" class="form-input" placeholder="Enter password" value="Password123!" required>
+        </div>
+
+        <div id="login-error-msg" style="color: var(--accent-rose); font-size: 0.85rem; margin-bottom: 0.75rem;"></div>
+
+        <button type="submit" id="btn-submit-login" class="btn btn-primary" style="margin-bottom: 1.25rem;">
+          Sign In to ThreatPulse SOC &rarr;
+        </button>
+      </form>
+
+      <!-- Register Form -->
+      <form id="form-register" style="display: none;">
+        <div class="form-group">
+          <label class="form-label">Full Name:</label>
+          <input type="text" id="reg-name-input" class="form-input" placeholder="e.g. John Doe" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email Address:</label>
+          <input type="email" id="reg-email-input" class="form-input" placeholder="e.g. analyst2@threatpulse.io" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Choose Password:</label>
+          <input type="password" id="reg-password-input" class="form-input" placeholder="Minimum 6 characters" required>
+        </div>
+
+        <div id="reg-error-msg" style="color: var(--accent-rose); font-size: 0.85rem; margin-bottom: 0.75rem;"></div>
+
+        <button type="submit" id="btn-submit-register" class="btn btn-primary" style="margin-bottom: 1.25rem;">
+          Create Free Account (+50 Welcome Credits) &rarr;
+        </button>
+      </form>
+
+      <!-- 1-Click Demo Profiles -->
+      <div style="background: rgba(0, 240, 255, 0.04); border: 1px solid rgba(0, 240, 255, 0.15); border-radius: 8px; padding: 1rem;">
+        <div style="font-size: 0.75rem; font-weight: 700; color: var(--accent-cyan); text-transform: uppercase; margin-bottom: 0.5rem;">
+          &#x26A1; Quick 1-Click Demo Profiles (Grading &amp; Testing)
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
+          <button type="button" class="btn btn-secondary btn-quick-login" data-email="free@threatpulse.io" style="padding: 0.4rem; font-size: 0.75rem; text-align: left; justify-content: flex-start;">
+            &#x1F464; <strong>Alex Vance</strong> (Free &bull; $35)
+          </button>
+          <button type="button" class="btn btn-secondary btn-quick-login" data-email="analyst@threatpulse.io" style="padding: 0.4rem; font-size: 0.75rem; text-align: left; justify-content: flex-start;">
+            &#x1F50E; <strong>Elena Rostova</strong> (Plus &bull; $100)
+          </button>
+          <button type="button" class="btn btn-secondary btn-quick-login" data-email="pro@threatpulse.io" style="padding: 0.4rem; font-size: 0.75rem; text-align: left; justify-content: flex-start;">
+            &#x26A1; <strong>Marcus Sterling</strong> (Pro &bull; $250)
+          </button>
+          <button type="button" class="btn btn-secondary btn-quick-login" data-email="admin@threatpulse.io" style="padding: 0.4rem; font-size: 0.75rem; text-align: left; justify-content: flex-start;">
+            &#x1F6E1; <strong>SOC Director</strong> (Admin &bull; $1000)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Module -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

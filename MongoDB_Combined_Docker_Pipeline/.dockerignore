@@ -1,0 +1,10 @@
+.env
+**/.env
+**/*.key
+**/*.pem
+**/certs/
+backups/
+**/backups/
+**/__pycache__/
+**/*.pyc
+.git/

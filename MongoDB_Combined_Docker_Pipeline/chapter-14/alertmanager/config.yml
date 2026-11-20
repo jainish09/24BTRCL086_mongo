@@ -1,0 +1,19 @@
+# Alertmanager Configuration for ThreatPulse SOC Platform
+# Ingests alerts into FastAPI Chapter 14 Webhook endpoint
+global:
+  resolve_timeout: 5m
+
+route:
+  group_by: ['alertname', 'instance']
+  group_wait: 10s
+  group_interval: 30s
+  repeat_interval: 1h
+  receiver: 'threatpulse-webhook'
+
+receivers:
+  - name: 'threatpulse-webhook'
+    webhook_configs:
+      - url: 'http://127.0.0.1:8080/api/services/lab14/webhook'
+        send_resolved: true
+        http_config:
+          bearer_token: 'threatpulse-soc-admin-secret-2026'

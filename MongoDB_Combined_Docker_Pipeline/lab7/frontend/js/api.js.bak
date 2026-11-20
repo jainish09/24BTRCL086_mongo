@@ -1,0 +1,165 @@
+/**
+ * Threat Intelligence Dashboard - API Service Layer
+ * Cleanly separates all data-fetching functions from the UI logic.
+ * Automatically discovers active backend port (8080 or 8000) on 127.0.0.1 / localhost.
+ */
+
+class ApiService {
+  constructor() {
+    const isFastApiDirect = (window.location.protocol.startsWith('http') && (window.location.port === '8080' || window.location.port === '8000'));
+    
+    this.candidateUrls = isFastApiDirect 
+      ? ['', 'http://127.0.0.1:8080', 'http://localhost:8080']
+      : ['http://127.0.0.1:8080', 'http://localhost:8080', 'http://127.0.0.1:8000', 'http://localhost:8000', ''];
+    
+    this.activeBaseUrl = null;
+  }
+
+  /**
+   * Helper method for standard JSON HTTP requests with port failover and error handling
+   */
+  async request(endpoint, options = {}) {
+    if (this.activeBaseUrl !== null) {
+      try {
+        const url = `${this.activeBaseUrl}/api${endpoint}`;
+        const response = await fetch(url, {
+          headers: {
+            'Content-Type': 'application/json',
+            ...(options.headers || {})
+          },
+          ...options
+        });
+
+        if (response.ok) {
+          return await response.json();
+        }
+      } catch (err) {
+        this.activeBaseUrl = null;
+      }
+    }
+
+    let lastError = null;
+    for (const base of this.candidateUrls) {
+      try {
+        const url = `${base}/api${endpoint}`;
+        const response = await fetch(url, {
+          headers: {
+            'Content-Type': 'application/json',
+            ...(options.headers || {})
+          },
+          ...options
+        });
+
+        if (response.ok) {
+          this.activeBaseUrl = base;
+          return await response.json();
+        }
+      } catch (err) {
+        lastError = err;
+      }
+    }
+
+    console.warn(`[API Warning] Could not reach backend at /api${endpoint}`);
+    throw (lastError || new Error(`Failed request to /api${endpoint}`));
+  }
+
+  /**
+   * GET /api/reports
+   */
+  async getReports({ search = '', year = '', threatType = '', severity = '', page = 1, limit = 12, sortBy = 'createdAt', order = 'desc' } = {}) {
+    const params = new URLSearchParams();
+    if (search) params.append('search', search);
+    if (year) params.append('year', year);
+    if (threatType && threatType !== 'All') params.append('threatType', threatType);
+    if (severity && severity !== 'All') params.append('severity', severity);
+    params.append('page', page);
+    params.append('limit', limit);
+    params.append('sort_by', sortBy);
+    params.append('order', order);
+
+    return this.request(`/reports?${params.toString()}`);
+  }
+
+  /**
+   * GET /api/reports/:id
+   */
+  async getReportById(reportId) {
+    return this.request(`/reports/${encodeURIComponent(reportId)}`);
+  }
+
+  /**
+   * GET /api/reports/count
+   */
+  async getReportsCount() {
+    return this.request('/reports/count');
+  }
+
+  /**
+   * GET /api/cache
+   */
+  async getCacheStats() {
+    return this.request('/cache');
+  }
+
+  /**
+   * GET /api/working-set
+   */
+  async getWorkingSetAnalysis() {
+    return this.request('/working-set');
+  }
+  async getWorkingSet() {
+    return this.getWorkingSetAnalysis();
+  }
+
+  /**
+   * GET /api/random-read/status
+   */
+  async getRandomReadStatus() {
+    return this.request('/random-read/status');
+  }
+
+  /**
+   * POST /api/random-read/start
+   */
+  async startRandomReadExperiment(reads = 500) {
+    return this.request(`/random-read/start?reads=${reads}`, {
+      method: 'POST'
+    });
+  }
+  async startRandomRead(reads = 500) {
+    return this.startRandomReadExperiment(reads);
+  }
+
+  /**
+   * POST /api/random-read/stop
+   */
+  async stopRandomReadExperiment() {
+    return this.request('/random-read/stop', {
+      method: 'POST'
+    });
+  }
+
+  /**
+   * GET /api/lab71/schema-analysis
+   */
+  async getLab71SchemaAnalysis() {
+    return this.request('/lab71/schema-analysis');
+  }
+  async getLab71Analysis() {
+    return this.getLab71SchemaAnalysis();
+  }
+
+  /**
+   * POST /api/lab71/benchmark-redesign
+   */
+  async benchmarkLab71Redesign(iterations = 100) {
+    return this.request(`/lab71/benchmark-redesign?iterations=${iterations}`, {
+      method: 'POST'
+    });
+  }
+  async runRedesignBenchmark(iterations = 100) {
+    return this.benchmarkLab71Redesign(iterations);
+  }
+}
+
+window.apiService = new ApiService();

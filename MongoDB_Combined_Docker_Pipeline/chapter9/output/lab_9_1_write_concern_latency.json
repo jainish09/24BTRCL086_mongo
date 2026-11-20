@@ -1,0 +1,760 @@
+{
+  "activity": "Lab 9.1 - Measure Write Concern Latency",
+  "script": "lab_9_1_write_concern_latency.py",
+  "documentsPerConcern": 1000,
+  "summary": [
+    {
+      "concern": "w: 1",
+      "writeConcern": {
+        "wtimeout": 30000,
+        "w": 1
+      },
+      "documents": 1000,
+      "total_s": 2.313,
+      "avg_ms": 2.313,
+      "median_ms": 2.062,
+      "p95_ms": 3.863,
+      "max_ms": 14.6,
+      "writes_per_s": 432.3,
+      "count_after": 1000
+    },
+    {
+      "concern": "w: majority",
+      "writeConcern": {
+        "wtimeout": 30000,
+        "w": "majority"
+      },
+      "documents": 1000,
+      "total_s": 8.38,
+      "avg_ms": 8.38,
+      "median_ms": 7.69,
+      "p95_ms": 12.796,
+      "max_ms": 37.519,
+      "writes_per_s": 119.3,
+      "count_after": 1000
+    },
+    {
+      "concern": "w: all (w: 3)",
+      "writeConcern": {
+        "wtimeout": 30000,
+        "w": 3
+      },
+      "documents": 1000,
+      "total_s": 6.286,
+      "avg_ms": 6.286,
+      "median_ms": 5.349,
+      "p95_ms": 14.182,
+      "max_ms": 17.577,
+      "writes_per_s": 159.1,
+      "count_after": 1000
+    }
+  ],
+  "steps": [
+    {
+      "step": "Initialise the replica set",
+      "executedAt": {
+        "$date": "2026-10-14T21:01:33.344Z"
+      },
+      "command": {
+        "replSetInitiate": {
+          "_id": "rs0",
+          "members": [
+            {
+              "_id": 0,
+              "host": "mongo1:27017"
+            },
+            {
+              "_id": 1,
+              "host": "mongo2:27017"
+            },
+            {
+              "_id": 2,
+              "host": "mongo3:27017"
+            }
+          ]
+        }
+      },
+      "result": {
+        "ok": 0.0,
+        "errmsg": "already initialized",
+        "code": 23,
+        "codeName": "AlreadyInitialized",
+        "$clusterTime": {
+          "clusterTime": {
+            "$timestamp": {
+              "t": 1792011686,
+              "i": 1
+            }
+          },
+          "signature": {
+            "hash": {
+              "$binary": {
+                "base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+                "subType": "00"
+              }
+            },
+            "keyId": 0
+          }
+        },
+        "operationTime": {
+          "$timestamp": {
+            "t": 1792011686,
+            "i": 1
+          }
+        }
+      }
+    },
+    {
+      "step": "rs.status() before the test",
+      "executedAt": {
+        "$date": "2026-10-14T21:01:33.370Z"
+      },
+      "command": {
+        "replSetGetStatus": 1
+      },
+      "result": {
+        "set": "rs0",
+        "date": {
+          "$date": "2026-10-14T21:01:33.369Z"
+        },
+        "myState": 2,
+        "term": 16,
+        "syncSourceHost": "mongo3:27017",
+        "syncSourceId": 2,
+        "heartbeatIntervalMillis": 2000,
+        "majorityVoteCount": 2,
+        "writeMajorityCount": 2,
+        "votingMembersCount": 3,
+        "writableVotingMembersCount": 3,
+        "optimes": {
+          "lastCommittedOpTime": {
+            "ts": {
+              "$timestamp": {
+                "t": 1792011686,
+                "i": 1
+              }
+            },
+            "t": 16
+          },
+          "lastCommittedWallTime": {
+            "$date": "2026-10-14T21:01:26.467Z"
+          },
+          "readConcernMajorityOpTime": {
+            "ts": {
+              "$timestamp": {
+                "t": 1792011686,
+                "i": 1
+              }
+            },
+            "t": 16
+          },
+          "appliedOpTime": {
+            "ts": {
+              "$timestamp": {
+                "t": 1792011686,
+                "i": 1
+              }
+            },
+            "t": 16
+          },
+          "durableOpTime": {
+            "ts": {
+              "$timestamp": {
+                "t": 1792011686,
+                "i": 1
+              }
+            },
+            "t": 16
+          },
+          "lastAppliedWallTime": {
+            "$date": "2026-10-14T21:01:26.467Z"
+          },
+          "lastDurableWallTime": {
+            "$date": "2026-10-14T21:01:26.467Z"
+          }
+        },
+        "lastStableRecoveryTimestamp": {
+          "$timestamp": {
+            "t": 1792011676,
+            "i": 1
+          }
+        },
+        "electionParticipantMetrics": {
+          "votedForCandidate": true,
+          "electionTerm": 16,
+          "lastVoteDate": {
+            "$date": "2026-10-14T20:55:46.448Z"
+          },
+          "electionCandidateMemberId": 1,
+          "voteReason": "",
+          "lastAppliedOpTimeAtElection": {
+            "ts": {
+              "$timestamp": {
+                "t": 1792011338,
+                "i": 2
+              }
+            },
+            "t": 15
+          },
+          "maxAppliedOpTimeInSet": {
+            "ts": {
+              "$timestamp": {
+                "t": 1792011338,
+                "i": 2
+              }
+            },
+            "t": 15
+          },
+          "priorityAtElection": 1.0,
+          "newTermStartDate": {
+            "$date": "2026-10-14T20:55:46.472Z"
+          },
+          "newTermAppliedDate": {
+            "$date": "2026-10-14T20:55:46.491Z"
+          }
+        },
+        "members": [
+          {
+            "_id": 0,
+            "name": "mongo1:27017",
+            "health": 1.0,
+            "state": 2,
+            "stateStr": "SECONDARY",
+            "uptime": 11536,
+            "optime": {
+              "ts": {
+                "$timestamp": {
+                  "t": 1792011686,
+                  "i": 1
+                }
+              },
+              "t": 16
+            },
+            "optimeDate": {
+              "$date": "2026-10-14T21:01:26Z"
+            },
+            "lastAppliedWallTime": {
+              "$date": "2026-10-14T21:01:26.467Z"
+            },
+            "lastDurableWallTime": {
+              "$date": "2026-10-14T21:01:26.467Z"
+            },
+            "syncSourceHost": "mongo3:27017",
+            "syncSourceId": 2,
+            "infoMessage": "",
+            "configVersion": 1,
+            "configTerm": 16,
+            "self": true,
+            "lastHeartbeatMessage": ""
+          },
+          {
+            "_id": 1,
+            "name": "mongo2:27017",
+            "health": 1.0,
+            "state": 1,
+            "stateStr": "PRIMARY",
+            "uptime": 2494,
+            "optime": {
+              "ts": {
+                "$timestamp": {
+                  "t": 1792011686,
+                  "i": 1
+                }
+              },
+              "t": 16
+            },
+            "optimeDurable": {
+              "ts": {
+                "$timestamp": {
+                  "t": 1792011686,
+                  "i": 1
+                }
+              },
+              "t": 16
+            },
+            "optimeDate": {
+              "$date": "2026-10-14T21:01:26Z"
+            },
+            "optimeDurableDate": {
+              "$date": "2026-10-14T21:01:26Z"
+            },
+            "lastAppliedWallTime": {
+              "$date": "2026-10-14T21:01:26.467Z"
+            },
+            "lastDurableWallTime": {
+              "$date": "2026-10-14T21:01:26.467Z"
+            },
+            "lastHeartbeat": {
+              "$date": "2026-10-14T21:01:33.164Z"
+            },
+            "lastHeartbeatRecv": {
+              "$date": "2026-10-14T21:01:32.615Z"
+            },
+            "pingMs": 0,
+            "lastHeartbeatMessage": "",
+            "syncSourceHost": "",
+            "syncSourceId": -1,
+            "infoMessage": "",
+            "electionTime": {
+              "$timestamp": {
+                "t": 1792011346,
+                "i": 1
+              }
+            },
+            "electionDate": {
+              "$date": "2026-10-14T20:55:46Z"
+            },
+            "configVersion": 1,
+            "configTerm": 16
+          },
+          {
+            "_id": 2,
+            "name": "mongo3:27017",
+            "health": 1.0,
+            "state": 2,
+            "stateStr": "SECONDARY",
+            "uptime": 2494,
+            "optime": {
+              "ts": {
+                "$timestamp": {
+                  "t": 1792011686,
+                  "i": 1
+                }
+              },
+              "t": 16
+            },
+            "optimeDurable": {
+              "ts": {
+                "$timestamp": {
+                  "t": 1792011686,
+                  "i": 1
+                }
+              },
+              "t": 16
+            },
+            "optimeDate": {
+              "$date": "2026-10-14T21:01:26Z"
+            },
+            "optimeDurableDate": {
+              "$date": "2026-10-14T21:01:26Z"
+            },
+            "lastAppliedWallTime": {
+              "$date": "2026-10-14T21:01:26.467Z"
+            },
+            "lastDurableWallTime": {
+              "$date": "2026-10-14T21:01:26.467Z"
+            },
+            "lastHeartbeat": {
+              "$date": "2026-10-14T21:01:33.164Z"
+            },
+            "lastHeartbeatRecv": {
+              "$date": "2026-10-14T21:01:32.610Z"
+            },
+            "pingMs": 0,
+            "lastHeartbeatMessage": "",
+            "syncSourceHost": "mongo2:27017",
+            "syncSourceId": 1,
+            "infoMessage": "",
+            "configVersion": 1,
+            "configTerm": 16
+          }
+        ],
+        "ok": 1.0,
+        "$clusterTime": {
+          "clusterTime": {
+            "$timestamp": {
+              "t": 1792011686,
+              "i": 1
+            }
+          },
+          "signature": {
+            "hash": {
+              "$binary": {
+                "base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+                "subType": "00"
+              }
+            },
+            "keyId": 0
+          }
+        },
+        "operationTime": {
+          "$timestamp": {
+            "t": 1792011686,
+            "i": 1
+          }
+        }
+      }
+    },
+    {
+      "step": "Insert 1000 documents with w: 1",
+      "executedAt": {
+        "$date": "2026-10-14T21:01:35.856Z"
+      },
+      "command": {
+        "insert": "latency_test",
+        "$db": "lab09",
+        "documents": "1000 x insert_one",
+        "writeConcern": {
+          "wtimeout": 30000,
+          "w": 1
+        }
+      },
+      "result": {
+        "concern": "w: 1",
+        "writeConcern": {
+          "wtimeout": 30000,
+          "w": 1
+        },
+        "documents": 1000,
+        "total_s": 2.313,
+        "avg_ms": 2.313,
+        "median_ms": 2.062,
+        "p95_ms": 3.863,
+        "max_ms": 14.6,
+        "writes_per_s": 432.3,
+        "count_after": 1000
+      }
+    },
+    {
+      "step": "Insert 1000 documents with w: majority",
+      "executedAt": {
+        "$date": "2026-10-14T21:01:44.825Z"
+      },
+      "command": {
+        "insert": "latency_test",
+        "$db": "lab09",
+        "documents": "1000 x insert_one",
+        "writeConcern": {
+          "wtimeout": 30000,
+          "w": "majority"
+        }
+      },
+      "result": {
+        "concern": "w: majority",
+        "writeConcern": {
+          "wtimeout": 30000,
+          "w": "majority"
+        },
+        "documents": 1000,
+        "total_s": 8.38,
+        "avg_ms": 8.38,
+        "median_ms": 7.69,
+        "p95_ms": 12.796,
+        "max_ms": 37.519,
+        "writes_per_s": 119.3,
+        "count_after": 1000
+      }
+    },
+    {
+      "step": "Insert 1000 documents with w: all (w: 3)",
+      "executedAt": {
+        "$date": "2026-10-14T21:01:51.707Z"
+      },
+      "command": {
+        "insert": "latency_test",
+        "$db": "lab09",
+        "documents": "1000 x insert_one",
+        "writeConcern": {
+          "wtimeout": 30000,
+          "w": 3
+        }
+      },
+      "result": {
+        "concern": "w: all (w: 3)",
+        "writeConcern": {
+          "wtimeout": 30000,
+          "w": 3
+        },
+        "documents": 1000,
+        "total_s": 6.286,
+        "avg_ms": 6.286,
+        "median_ms": 5.349,
+        "p95_ms": 14.182,
+        "max_ms": 17.577,
+        "writes_per_s": 159.1,
+        "count_after": 1000
+      }
+    },
+    {
+      "step": "rs.status() after the test",
+      "executedAt": {
+        "$date": "2026-10-14T21:01:51.714Z"
+      },
+      "command": {
+        "replSetGetStatus": 1
+      },
+      "result": {
+        "set": "rs0",
+        "date": {
+          "$date": "2026-10-14T21:01:51.714Z"
+        },
+        "myState": 2,
+        "term": 16,
+        "syncSourceHost": "mongo3:27017",
+        "syncSourceId": 2,
+        "heartbeatIntervalMillis": 2000,
+        "majorityVoteCount": 2,
+        "writeMajorityCount": 2,
+        "votingMembersCount": 3,
+        "writableVotingMembersCount": 3,
+        "optimes": {
+          "lastCommittedOpTime": {
+            "ts": {
+              "$timestamp": {
+                "t": 1792011711,
+                "i": 137
+              }
+            },
+            "t": 16
+          },
+          "lastCommittedWallTime": {
+            "$date": "2026-10-14T21:01:51.701Z"
+          },
+          "readConcernMajorityOpTime": {
+            "ts": {
+              "$timestamp": {
+                "t": 1792011711,
+                "i": 137
+              }
+            },
+            "t": 16
+          },
+          "appliedOpTime": {
+            "ts": {
+              "$timestamp": {
+                "t": 1792011711,
+                "i": 137
+              }
+            },
+            "t": 16
+          },
+          "durableOpTime": {
+            "ts": {
+              "$timestamp": {
+                "t": 1792011711,
+                "i": 137
+              }
+            },
+            "t": 16
+          },
+          "lastAppliedWallTime": {
+            "$date": "2026-10-14T21:01:51.701Z"
+          },
+          "lastDurableWallTime": {
+            "$date": "2026-10-14T21:01:51.701Z"
+          }
+        },
+        "lastStableRecoveryTimestamp": {
+          "$timestamp": {
+            "t": 1792011676,
+            "i": 1
+          }
+        },
+        "electionParticipantMetrics": {
+          "votedForCandidate": true,
+          "electionTerm": 16,
+          "lastVoteDate": {
+            "$date": "2026-10-14T20:55:46.448Z"
+          },
+          "electionCandidateMemberId": 1,
+          "voteReason": "",
+          "lastAppliedOpTimeAtElection": {
+            "ts": {
+              "$timestamp": {
+                "t": 1792011338,
+                "i": 2
+              }
+            },
+            "t": 15
+          },
+          "maxAppliedOpTimeInSet": {
+            "ts": {
+              "$timestamp": {
+                "t": 1792011338,
+                "i": 2
+              }
+            },
+            "t": 15
+          },
+          "priorityAtElection": 1.0,
+          "newTermStartDate": {
+            "$date": "2026-10-14T20:55:46.472Z"
+          },
+          "newTermAppliedDate": {
+            "$date": "2026-10-14T20:55:46.491Z"
+          }
+        },
+        "members": [
+          {
+            "_id": 0,
+            "name": "mongo1:27017",
+            "health": 1.0,
+            "state": 2,
+            "stateStr": "SECONDARY",
+            "uptime": 11554,
+            "optime": {
+              "ts": {
+                "$timestamp": {
+                  "t": 1792011711,
+                  "i": 137
+                }
+              },
+              "t": 16
+            },
+            "optimeDate": {
+              "$date": "2026-10-14T21:01:51Z"
+            },
+            "lastAppliedWallTime": {
+              "$date": "2026-10-14T21:01:51.701Z"
+            },
+            "lastDurableWallTime": {
+              "$date": "2026-10-14T21:01:51.701Z"
+            },
+            "syncSourceHost": "mongo3:27017",
+            "syncSourceId": 2,
+            "infoMessage": "",
+            "configVersion": 1,
+            "configTerm": 16,
+            "self": true,
+            "lastHeartbeatMessage": ""
+          },
+          {
+            "_id": 1,
+            "name": "mongo2:27017",
+            "health": 1.0,
+            "state": 1,
+            "stateStr": "PRIMARY",
+            "uptime": 2513,
+            "optime": {
+              "ts": {
+                "$timestamp": {
+                  "t": 1792011711,
+                  "i": 34
+                }
+              },
+              "t": 16
+            },
+            "optimeDurable": {
+              "ts": {
+                "$timestamp": {
+                  "t": 1792011711,
+                  "i": 24
+                }
+              },
+              "t": 16
+            },
+            "optimeDate": {
+              "$date": "2026-10-14T21:01:51Z"
+            },
+            "optimeDurableDate": {
+              "$date": "2026-10-14T21:01:51Z"
+            },
+            "lastAppliedWallTime": {
+              "$date": "2026-10-14T21:01:51.172Z"
+            },
+            "lastDurableWallTime": {
+              "$date": "2026-10-14T21:01:51.116Z"
+            },
+            "lastHeartbeat": {
+              "$date": "2026-10-14T21:01:51.173Z"
+            },
+            "lastHeartbeatRecv": {
+              "$date": "2026-10-14T21:01:50.625Z"
+            },
+            "pingMs": 0,
+            "lastHeartbeatMessage": "",
+            "syncSourceHost": "",
+            "syncSourceId": -1,
+            "infoMessage": "",
+            "electionTime": {
+              "$timestamp": {
+                "t": 1792011346,
+                "i": 1
+              }
+            },
+            "electionDate": {
+              "$date": "2026-10-14T20:55:46Z"
+            },
+            "configVersion": 1,
+            "configTerm": 16
+          },
+          {
+            "_id": 2,
+            "name": "mongo3:27017",
+            "health": 1.0,
+            "state": 2,
+            "stateStr": "SECONDARY",
+            "uptime": 2513,
+            "optime": {
+              "ts": {
+                "$timestamp": {
+                  "t": 1792011711,
+                  "i": 33
+                }
+              },
+              "t": 16
+            },
+            "optimeDurable": {
+              "ts": {
+                "$timestamp": {
+                  "t": 1792011711,
+                  "i": 33
+                }
+              },
+              "t": 16
+            },
+            "optimeDate": {
+              "$date": "2026-10-14T21:01:51Z"
+            },
+            "optimeDurableDate": {
+              "$date": "2026-10-14T21:01:51Z"
+            },
+            "lastAppliedWallTime": {
+              "$date": "2026-10-14T21:01:51.167Z"
+            },
+            "lastDurableWallTime": {
+              "$date": "2026-10-14T21:01:51.167Z"
+            },
+            "lastHeartbeat": {
+              "$date": "2026-10-14T21:01:51.172Z"
+            },
+            "lastHeartbeatRecv": {
+              "$date": "2026-10-14T21:01:50.622Z"
+            },
+            "pingMs": 0,
+            "lastHeartbeatMessage": "",
+            "syncSourceHost": "mongo2:27017",
+            "syncSourceId": 1,
+            "infoMessage": "",
+            "configVersion": 1,
+            "configTerm": 16
+          }
+        ],
+        "ok": 1.0,
+        "$clusterTime": {
+          "clusterTime": {
+            "$timestamp": {
+              "t": 1792011711,
+              "i": 137
+            }
+          },
+          "signature": {
+            "hash": {
+              "$binary": {
+                "base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+                "subType": "00"
+              }
+            },
+            "keyId": 0
+          }
+        },
+        "operationTime": {
+          "$timestamp": {
+            "t": 1792011711,
+            "i": 137
+          }
+        }
+      }
+    }
+  ]
+}

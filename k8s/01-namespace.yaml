@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: threatpulse
+  labels:
+    app.kubernetes.io/name: threatpulse
+    app.kubernetes.io/part-of: threatpulse-platform

@@ -1,0 +1,1130 @@
+{
+  "activity": "Lab 9.2 - Simulate a Network Partition",
+  "script": "lab_9_2_network_partition.py",
+  "network": "combined-mongo-net",
+  "partitionSeconds": 30,
+  "inserts": [
+    {
+      "phase": "A",
+      "label": "w: 1",
+      "writeConcern": {
+        "w": 1
+      },
+      "outcome": "SUCCESS",
+      "ms": 23.2,
+      "detail": "acknowledged"
+    },
+    {
+      "phase": "A",
+      "label": "w: majority",
+      "writeConcern": {
+        "wtimeout": 5000,
+        "w": "majority"
+      },
+      "outcome": "SUCCESS",
+      "ms": 28.6,
+      "detail": "acknowledged"
+    },
+    {
+      "phase": "B",
+      "label": "w: 1 (before step-down)",
+      "writeConcern": {
+        "w": 1
+      },
+      "outcome": "SUCCESS",
+      "ms": 2.9,
+      "detail": "acknowledged"
+    },
+    {
+      "phase": "B",
+      "label": "w: majority (before step-down)",
+      "writeConcern": {
+        "wtimeout": 5000,
+        "w": "majority"
+      },
+      "outcome": "FAILED",
+      "ms": 5017.6,
+      "detail": "WTimeoutError: waiting for replication timed out"
+    },
+    {
+      "phase": "B",
+      "label": "w: 1 (after step-down)",
+      "writeConcern": {
+        "w": 1
+      },
+      "outcome": "FAILED",
+      "ms": 5261.9,
+      "detail": "ServerSelectionTimeoutError: No primary available for writes"
+    }
+  ],
+  "timeline": [
+    {
+      "t_s": 2.1,
+      "clock": "21:02:38",
+      "event": "all members healthy, starting the experiment"
+    },
+    {
+      "t_s": 2.4,
+      "clock": "21:02:39",
+      "event": "docker network disconnect combined-mongo-net combined-mongo1   <-- mongo1:27017 partitioned"
+    },
+    {
+      "t_s": 14.4,
+      "clock": "21:02:51",
+      "event": "primary marked mongo1:27017 as down after 12.0 s (heartbeat timeout); mongo2:27017 + mongo3:27017 are still 2 of 3 = a majority"
+    },
+    {
+      "t_s": 14.5,
+      "clock": "21:02:51",
+      "event": "w: 1                             SUCCESS      23.2 ms   acknowledged"
+    },
+    {
+      "t_s": 14.5,
+      "clock": "21:02:51",
+      "event": "w: majority                      SUCCESS      28.6 ms   acknowledged"
+    },
+    {
+      "t_s": 32.5,
+      "clock": "21:03:09",
+      "event": "docker network disconnect combined-mongo-net combined-mongo3   <-- mongo3:27017 partitioned"
+    },
+    {
+      "t_s": 32.5,
+      "clock": "21:03:09",
+      "event": "w: 1 (before step-down)          SUCCESS       2.9 ms   acknowledged"
+    },
+    {
+      "t_s": 37.5,
+      "clock": "21:03:14",
+      "event": "w: majority (before step-down)   FAILED     5017.6 ms   WTimeoutError: waiting for replication timed out"
+    },
+    {
+      "t_s": 45.5,
+      "clock": "21:03:22",
+      "event": "mongo2:27017 STEPPED DOWN to SECONDARY 13.4 s after it lost its majority - no member can accept writes"
+    },
+    {
+      "t_s": 50.8,
+      "clock": "21:03:27",
+      "event": "w: 1 (after step-down)           FAILED     5261.9 ms   ServerSelectionTimeoutError: No primary available for writes"
+    },
+    {
+      "t_s": 50.8,
+      "clock": "21:03:27",
+      "event": "read from mongo2:27017 SUCCESS - 4 documents: the set is read-only"
+    },
+    {
+      "t_s": 62.3,
+      "clock": "21:03:39",
+      "event": "docker network connect combined-mongo-net combined-mongo1   <-- mongo1:27017 back on the network"
+    },
+    {
+      "t_s": 62.4,
+      "clock": "21:03:39",
+      "event": "docker network connect combined-mongo-net combined-mongo3   <-- mongo3:27017 back on the network"
+    },
+    {
+      "t_s": 64.9,
+      "clock": "21:03:41",
+      "event": "election finished: mongo3:27017 is PRIMARY 2.7 s after the reconnect (old primary was mongo2:27017)"
+    },
+    {
+      "t_s": 66.9,
+      "clock": "21:03:43",
+      "event": "all members caught up 4.8 s after the reconnect"
+    }
+  ],
+  "observerChanges": [
+    {
+      "at": {
+        "$date": "2026-10-14T21:02:36.882Z"
+      },
+      "states": {
+        "mongo1:27017": "SECONDARY",
+        "mongo2:27017": "PRIMARY",
+        "mongo3:27017": "SECONDARY"
+      },
+      "primary": "mongo2:27017",
+      "primary_sees_down": []
+    },
+    {
+      "at": {
+        "$date": "2026-10-14T21:02:42.002Z"
+      },
+      "states": {
+        "mongo1:27017": "UNREACHABLE",
+        "mongo2:27017": "PRIMARY",
+        "mongo3:27017": "SECONDARY"
+      },
+      "primary": "mongo2:27017",
+      "primary_sees_down": []
+    },
+    {
+      "at": {
+        "$date": "2026-10-14T21:02:50.981Z"
+      },
+      "states": {
+        "mongo1:27017": "UNREACHABLE",
+        "mongo2:27017": "PRIMARY",
+        "mongo3:27017": "SECONDARY"
+      },
+      "primary": "mongo2:27017",
+      "primary_sees_down": [
+        "mongo1:27017"
+      ]
+    },
+    {
+      "at": {
+        "$date": "2026-10-14T21:03:12.857Z"
+      },
+      "states": {
+        "mongo1:27017": "UNREACHABLE",
+        "mongo2:27017": "PRIMARY",
+        "mongo3:27017": "UNREACHABLE"
+      },
+      "primary": "mongo2:27017",
+      "primary_sees_down": [
+        "mongo1:27017"
+      ]
+    },
+    {
+      "at": {
+        "$date": "2026-10-14T21:03:18.856Z"
+      },
+      "states": {
+        "mongo1:27017": "UNREACHABLE",
+        "mongo2:27017": "PRIMARY",
+        "mongo3:27017": "UNREACHABLE"
+      },
+      "primary": "mongo2:27017",
+      "primary_sees_down": [
+        "mongo1:27017",
+        "mongo3:27017"
+      ]
+    },
+    {
+      "at": {
+        "$date": "2026-10-14T21:03:21.987Z"
+      },
+      "states": {
+        "mongo1:27017": "UNREACHABLE",
+        "mongo2:27017": "SECONDARY",
+        "mongo3:27017": "UNREACHABLE"
+      },
+      "primary": null,
+      "primary_sees_down": []
+    },
+    {
+      "at": {
+        "$date": "2026-10-14T21:03:39.535Z"
+      },
+      "states": {
+        "mongo1:27017": "UNREACHABLE",
+        "mongo2:27017": "SECONDARY",
+        "mongo3:27017": "SECONDARY"
+      },
+      "primary": null,
+      "primary_sees_down": []
+    },
+    {
+      "at": {
+        "$date": "2026-10-14T21:03:40.542Z"
+      },
+      "states": {
+        "mongo1:27017": "SECONDARY",
+        "mongo2:27017": "SECONDARY",
+        "mongo3:27017": "SECONDARY"
+      },
+      "primary": null,
+      "primary_sees_down": []
+    },
+    {
+      "at": {
+        "$date": "2026-10-14T21:03:41.550Z"
+      },
+      "states": {
+        "mongo1:27017": "SECONDARY",
+        "mongo2:27017": "SECONDARY",
+        "mongo3:27017": "PRIMARY"
+      },
+      "primary": "mongo3:27017",
+      "primary_sees_down": []
+    }
+  ],
+  "documentsPerMember": {
+    "mongo1:27017": {
+      "w: majority": 1,
+      "w: majority (before step-down)": 1,
+      "w: 1 (before step-down)": 1,
+      "w: 1": 1
+    },
+    "mongo2:27017": {
+      "w: majority": 1,
+      "w: 1 (before step-down)": 1,
+      "w: majority (before step-down)": 1,
+      "w: 1": 1
+    },
+    "mongo3:27017": {
+      "w: majority": 1,
+      "w: 1 (before step-down)": 1,
+      "w: majority (before step-down)": 1,
+      "w: 1": 1
+    }
+  },
+  "steps": [
+    {
+      "step": "Initialise the replica set",
+      "executedAt": {
+        "$date": "2026-10-14T21:02:36.838Z"
+      },
+      "command": {
+        "replSetInitiate": {
+          "_id": "rs0",
+          "members": [
+            {
+              "_id": 0,
+              "host": "mongo1:27017"
+            },
+            {
+              "_id": 1,
+              "host": "mongo2:27017"
+            },
+            {
+              "_id": 2,
+              "host": "mongo3:27017"
+            }
+          ]
+        }
+      },
+      "result": {
+        "ok": 0.0,
+        "errmsg": "already initialized",
+        "code": 23,
+        "codeName": "AlreadyInitialized",
+        "$clusterTime": {
+          "clusterTime": {
+            "$timestamp": {
+              "t": 1792011754,
+              "i": 91
+            }
+          },
+          "signature": {
+            "hash": {
+              "$binary": {
+                "base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+                "subType": "00"
+              }
+            },
+            "keyId": 0
+          }
+        },
+        "operationTime": {
+          "$timestamp": {
+            "t": 1792011754,
+            "i": 91
+          }
+        }
+      }
+    },
+    {
+      "step": "rs.status() before the partition",
+      "executedAt": {
+        "$date": "2026-10-14T21:02:36.849Z"
+      },
+      "command": {
+        "replSetGetStatus": 1
+      },
+      "result": {
+        "set": "rs0",
+        "date": {
+          "$date": "2026-10-14T21:02:36.849Z"
+        },
+        "myState": 2,
+        "term": 16,
+        "syncSourceHost": "mongo3:27017",
+        "syncSourceId": 2,
+        "heartbeatIntervalMillis": 2000,
+        "majorityVoteCount": 2,
+        "writeMajorityCount": 2,
+        "votingMembersCount": 3,
+        "writableVotingMembersCount": 3,
+        "optimes": {
+          "lastCommittedOpTime": {
+            "ts": {
+              "$timestamp": {
+                "t": 1792011754,
+                "i": 91
+              }
+            },
+            "t": 16
+          },
+          "lastCommittedWallTime": {
+            "$date": "2026-10-14T21:02:34.555Z"
+          },
+          "readConcernMajorityOpTime": {
+            "ts": {
+              "$timestamp": {
+                "t": 1792011754,
+                "i": 91
+              }
+            },
+            "t": 16
+          },
+          "appliedOpTime": {
+            "ts": {
+              "$timestamp": {
+                "t": 1792011754,
+                "i": 91
+              }
+            },
+            "t": 16
+          },
+          "durableOpTime": {
+            "ts": {
+              "$timestamp": {
+                "t": 1792011754,
+                "i": 91
+              }
+            },
+            "t": 16
+          },
+          "lastAppliedWallTime": {
+            "$date": "2026-10-14T21:02:34.555Z"
+          },
+          "lastDurableWallTime": {
+            "$date": "2026-10-14T21:02:34.555Z"
+          }
+        },
+        "lastStableRecoveryTimestamp": {
+          "$timestamp": {
+            "t": 1792011736,
+            "i": 89
+          }
+        },
+        "electionParticipantMetrics": {
+          "votedForCandidate": true,
+          "electionTerm": 16,
+          "lastVoteDate": {
+            "$date": "2026-10-14T20:55:46.448Z"
+          },
+          "electionCandidateMemberId": 1,
+          "voteReason": "",
+          "lastAppliedOpTimeAtElection": {
+            "ts": {
+              "$timestamp": {
+                "t": 1792011338,
+                "i": 2
+              }
+            },
+            "t": 15
+          },
+          "maxAppliedOpTimeInSet": {
+            "ts": {
+              "$timestamp": {
+                "t": 1792011338,
+                "i": 2
+              }
+            },
+            "t": 15
+          },
+          "priorityAtElection": 1.0,
+          "newTermStartDate": {
+            "$date": "2026-10-14T20:55:46.472Z"
+          },
+          "newTermAppliedDate": {
+            "$date": "2026-10-14T20:55:46.491Z"
+          }
+        },
+        "members": [
+          {
+            "_id": 0,
+            "name": "mongo1:27017",
+            "health": 1.0,
+            "state": 2,
+            "stateStr": "SECONDARY",
+            "uptime": 11599,
+            "optime": {
+              "ts": {
+                "$timestamp": {
+                  "t": 1792011754,
+                  "i": 91
+                }
+              },
+              "t": 16
+            },
+            "optimeDate": {
+              "$date": "2026-10-14T21:02:34Z"
+            },
+            "lastAppliedWallTime": {
+              "$date": "2026-10-14T21:02:34.555Z"
+            },
+            "lastDurableWallTime": {
+              "$date": "2026-10-14T21:02:34.555Z"
+            },
+            "syncSourceHost": "mongo3:27017",
+            "syncSourceId": 2,
+            "infoMessage": "",
+            "configVersion": 1,
+            "configTerm": 16,
+            "self": true,
+            "lastHeartbeatMessage": ""
+          },
+          {
+            "_id": 1,
+            "name": "mongo2:27017",
+            "health": 1.0,
+            "state": 1,
+            "stateStr": "PRIMARY",
+            "uptime": 2558,
+            "optime": {
+              "ts": {
+                "$timestamp": {
+                  "t": 1792011754,
+                  "i": 91
+                }
+              },
+              "t": 16
+            },
+            "optimeDurable": {
+              "ts": {
+                "$timestamp": {
+                  "t": 1792011754,
+                  "i": 91
+                }
+              },
+              "t": 16
+            },
+            "optimeDate": {
+              "$date": "2026-10-14T21:02:34Z"
+            },
+            "optimeDurableDate": {
+              "$date": "2026-10-14T21:02:34Z"
+            },
+            "lastAppliedWallTime": {
+              "$date": "2026-10-14T21:02:34.555Z"
+            },
+            "lastDurableWallTime": {
+              "$date": "2026-10-14T21:02:34.555Z"
+            },
+            "lastHeartbeat": {
+              "$date": "2026-10-14T21:02:36.621Z"
+            },
+            "lastHeartbeatRecv": {
+              "$date": "2026-10-14T21:02:36.631Z"
+            },
+            "pingMs": 0,
+            "lastHeartbeatMessage": "",
+            "syncSourceHost": "",
+            "syncSourceId": -1,
+            "infoMessage": "",
+            "electionTime": {
+              "$timestamp": {
+                "t": 1792011346,
+                "i": 1
+              }
+            },
+            "electionDate": {
+              "$date": "2026-10-14T20:55:46Z"
+            },
+            "configVersion": 1,
+            "configTerm": 16
+          },
+          {
+            "_id": 2,
+            "name": "mongo3:27017",
+            "health": 1.0,
+            "state": 2,
+            "stateStr": "SECONDARY",
+            "uptime": 2558,
+            "optime": {
+              "ts": {
+                "$timestamp": {
+                  "t": 1792011754,
+                  "i": 91
+                }
+              },
+              "t": 16
+            },
+            "optimeDurable": {
+              "ts": {
+                "$timestamp": {
+                  "t": 1792011754,
+                  "i": 91
+                }
+              },
+              "t": 16
+            },
+            "optimeDate": {
+              "$date": "2026-10-14T21:02:34Z"
+            },
+            "optimeDurableDate": {
+              "$date": "2026-10-14T21:02:34Z"
+            },
+            "lastAppliedWallTime": {
+              "$date": "2026-10-14T21:02:34.555Z"
+            },
+            "lastDurableWallTime": {
+              "$date": "2026-10-14T21:02:34.555Z"
+            },
+            "lastHeartbeat": {
+              "$date": "2026-10-14T21:02:36.622Z"
+            },
+            "lastHeartbeatRecv": {
+              "$date": "2026-10-14T21:02:36.626Z"
+            },
+            "pingMs": 0,
+            "lastHeartbeatMessage": "",
+            "syncSourceHost": "mongo2:27017",
+            "syncSourceId": 1,
+            "infoMessage": "",
+            "configVersion": 1,
+            "configTerm": 16
+          }
+        ],
+        "ok": 1.0,
+        "$clusterTime": {
+          "clusterTime": {
+            "$timestamp": {
+              "t": 1792011754,
+              "i": 91
+            }
+          },
+          "signature": {
+            "hash": {
+              "$binary": {
+                "base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+                "subType": "00"
+              }
+            },
+            "keyId": 0
+          }
+        },
+        "operationTime": {
+          "$timestamp": {
+            "t": 1792011754,
+            "i": 91
+          }
+        }
+      }
+    },
+    {
+      "step": "docker network disconnect combined-mongo-net combined-mongo1",
+      "executedAt": {
+        "$date": "2026-10-14T21:02:39.172Z"
+      },
+      "command": {
+        "docker": "network disconnect combined-mongo-net combined-mongo1"
+      },
+      "result": {
+        "ok": true
+      }
+    },
+    {
+      "step": "A: insert with w: 1",
+      "executedAt": {
+        "$date": "2026-10-14T21:02:51.216Z"
+      },
+      "command": {
+        "insert": "partition_test",
+        "$db": "lab09",
+        "writeConcern": {
+          "w": 1
+        }
+      },
+      "result": {
+        "phase": "A",
+        "label": "w: 1",
+        "writeConcern": {
+          "w": 1
+        },
+        "outcome": "SUCCESS",
+        "ms": 23.2,
+        "detail": "acknowledged"
+      }
+    },
+    {
+      "step": "A: insert with w: majority",
+      "executedAt": {
+        "$date": "2026-10-14T21:02:51.246Z"
+      },
+      "command": {
+        "insert": "partition_test",
+        "$db": "lab09",
+        "writeConcern": {
+          "wtimeout": 5000,
+          "w": "majority"
+        }
+      },
+      "result": {
+        "phase": "A",
+        "label": "w: majority",
+        "writeConcern": {
+          "wtimeout": 5000,
+          "w": "majority"
+        },
+        "outcome": "SUCCESS",
+        "ms": 28.6,
+        "detail": "acknowledged"
+      }
+    },
+    {
+      "step": "docker network disconnect combined-mongo-net combined-mongo3",
+      "executedAt": {
+        "$date": "2026-10-14T21:03:09.208Z"
+      },
+      "command": {
+        "docker": "network disconnect combined-mongo-net combined-mongo3"
+      },
+      "result": {
+        "ok": true
+      }
+    },
+    {
+      "step": "B: insert with w: 1 (before step-down)",
+      "executedAt": {
+        "$date": "2026-10-14T21:03:09.212Z"
+      },
+      "command": {
+        "insert": "partition_test",
+        "$db": "lab09",
+        "writeConcern": {
+          "w": 1
+        }
+      },
+      "result": {
+        "phase": "B",
+        "label": "w: 1 (before step-down)",
+        "writeConcern": {
+          "w": 1
+        },
+        "outcome": "SUCCESS",
+        "ms": 2.9,
+        "detail": "acknowledged"
+      }
+    },
+    {
+      "step": "B: insert with w: majority (before step-down)",
+      "executedAt": {
+        "$date": "2026-10-14T21:03:14.232Z"
+      },
+      "command": {
+        "insert": "partition_test",
+        "$db": "lab09",
+        "writeConcern": {
+          "wtimeout": 5000,
+          "w": "majority"
+        }
+      },
+      "result": {
+        "phase": "B",
+        "label": "w: majority (before step-down)",
+        "writeConcern": {
+          "wtimeout": 5000,
+          "w": "majority"
+        },
+        "outcome": "FAILED",
+        "ms": 5017.6,
+        "detail": "WTimeoutError: waiting for replication timed out"
+      }
+    },
+    {
+      "step": "B: insert with w: 1 (after step-down)",
+      "executedAt": {
+        "$date": "2026-10-14T21:03:27.507Z"
+      },
+      "command": {
+        "insert": "partition_test",
+        "$db": "lab09",
+        "writeConcern": {
+          "w": 1
+        }
+      },
+      "result": {
+        "phase": "B",
+        "label": "w: 1 (after step-down)",
+        "writeConcern": {
+          "w": 1
+        },
+        "outcome": "FAILED",
+        "ms": 5261.9,
+        "detail": "ServerSelectionTimeoutError: No primary available for writes"
+      }
+    },
+    {
+      "step": "docker network connect combined-mongo-net combined-mongo1",
+      "executedAt": {
+        "$date": "2026-10-14T21:03:39.010Z"
+      },
+      "command": {
+        "docker": "network connect combined-mongo-net combined-mongo1"
+      },
+      "result": {
+        "ok": true
+      }
+    },
+    {
+      "step": "docker network connect combined-mongo-net combined-mongo3",
+      "executedAt": {
+        "$date": "2026-10-14T21:03:39.126Z"
+      },
+      "command": {
+        "docker": "network connect combined-mongo-net combined-mongo3"
+      },
+      "result": {
+        "ok": true
+      }
+    },
+    {
+      "step": "Catch-up after reconnect (replSetGetStatus polls)",
+      "executedAt": {
+        "$date": "2026-10-14T21:03:43.657Z"
+      },
+      "command": {
+        "replSetGetStatus": 1
+      },
+      "result": [
+        {
+          "at": {
+            "$date": "2026-10-14T21:03:41.643Z"
+          },
+          "states": {
+            "mongo1:27017": "SECONDARY",
+            "mongo2:27017": "SECONDARY",
+            "mongo3:27017": "PRIMARY"
+          },
+          "lag_s": {
+            "mongo1:27017": 65.0,
+            "mongo2:27017": 32.0,
+            "mongo3:27017": 0.0
+          }
+        },
+        {
+          "at": {
+            "$date": "2026-10-14T21:03:43.651Z"
+          },
+          "states": {
+            "mongo1:27017": "SECONDARY",
+            "mongo2:27017": "SECONDARY",
+            "mongo3:27017": "PRIMARY"
+          },
+          "lag_s": {
+            "mongo1:27017": 0.0,
+            "mongo2:27017": 0.0,
+            "mongo3:27017": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "step": "Documents per member after recovery",
+      "executedAt": {
+        "$date": "2026-10-14T21:03:45.685Z"
+      },
+      "command": {
+        "aggregate": "partition_test",
+        "$group": "label"
+      },
+      "result": {
+        "mongo1:27017": {
+          "w: majority": 1,
+          "w: majority (before step-down)": 1,
+          "w: 1 (before step-down)": 1,
+          "w: 1": 1
+        },
+        "mongo2:27017": {
+          "w: majority": 1,
+          "w: 1 (before step-down)": 1,
+          "w: majority (before step-down)": 1,
+          "w: 1": 1
+        },
+        "mongo3:27017": {
+          "w: majority": 1,
+          "w: 1 (before step-down)": 1,
+          "w: majority (before step-down)": 1,
+          "w: 1": 1
+        }
+      }
+    },
+    {
+      "step": "rs.status() after recovery",
+      "executedAt": {
+        "$date": "2026-10-14T21:03:45.691Z"
+      },
+      "command": {
+        "replSetGetStatus": 1
+      },
+      "result": {
+        "set": "rs0",
+        "date": {
+          "$date": "2026-10-14T21:03:45.690Z"
+        },
+        "myState": 2,
+        "term": 17,
+        "syncSourceHost": "mongo2:27017",
+        "syncSourceId": 1,
+        "heartbeatIntervalMillis": 2000,
+        "majorityVoteCount": 2,
+        "writeMajorityCount": 2,
+        "votingMembersCount": 3,
+        "writableVotingMembersCount": 3,
+        "optimes": {
+          "lastCommittedOpTime": {
+            "ts": {
+              "$timestamp": {
+                "t": 1792011821,
+                "i": 2
+              }
+            },
+            "t": 17
+          },
+          "lastCommittedWallTime": {
+            "$date": "2026-10-14T21:03:41.131Z"
+          },
+          "readConcernMajorityOpTime": {
+            "ts": {
+              "$timestamp": {
+                "t": 1792011821,
+                "i": 2
+              }
+            },
+            "t": 17
+          },
+          "appliedOpTime": {
+            "ts": {
+              "$timestamp": {
+                "t": 1792011821,
+                "i": 2
+              }
+            },
+            "t": 17
+          },
+          "durableOpTime": {
+            "ts": {
+              "$timestamp": {
+                "t": 1792011821,
+                "i": 2
+              }
+            },
+            "t": 17
+          },
+          "lastAppliedWallTime": {
+            "$date": "2026-10-14T21:03:41.131Z"
+          },
+          "lastDurableWallTime": {
+            "$date": "2026-10-14T21:03:41.131Z"
+          }
+        },
+        "lastStableRecoveryTimestamp": {
+          "$timestamp": {
+            "t": 1792011756,
+            "i": 1
+          }
+        },
+        "electionParticipantMetrics": {
+          "votedForCandidate": true,
+          "electionTerm": 17,
+          "lastVoteDate": {
+            "$date": "2026-10-14T21:03:41.118Z"
+          },
+          "electionCandidateMemberId": 2,
+          "voteReason": "",
+          "lastAppliedOpTimeAtElection": {
+            "ts": {
+              "$timestamp": {
+                "t": 1792011756,
+                "i": 1
+              }
+            },
+            "t": 16
+          },
+          "maxAppliedOpTimeInSet": {
+            "ts": {
+              "$timestamp": {
+                "t": 1792011789,
+                "i": 2
+              }
+            },
+            "t": 16
+          },
+          "priorityAtElection": 1.0,
+          "newTermStartDate": {
+            "$date": "2026-10-14T21:03:41.131Z"
+          },
+          "newTermAppliedDate": {
+            "$date": "2026-10-14T21:03:42.846Z"
+          }
+        },
+        "members": [
+          {
+            "_id": 0,
+            "name": "mongo1:27017",
+            "health": 1.0,
+            "state": 2,
+            "stateStr": "SECONDARY",
+            "uptime": 11668,
+            "optime": {
+              "ts": {
+                "$timestamp": {
+                  "t": 1792011821,
+                  "i": 2
+                }
+              },
+              "t": 17
+            },
+            "optimeDate": {
+              "$date": "2026-10-14T21:03:41Z"
+            },
+            "lastAppliedWallTime": {
+              "$date": "2026-10-14T21:03:41.131Z"
+            },
+            "lastDurableWallTime": {
+              "$date": "2026-10-14T21:03:41.131Z"
+            },
+            "syncSourceHost": "mongo2:27017",
+            "syncSourceId": 1,
+            "infoMessage": "",
+            "configVersion": 1,
+            "configTerm": 17,
+            "self": true,
+            "lastHeartbeatMessage": ""
+          },
+          {
+            "_id": 1,
+            "name": "mongo2:27017",
+            "health": 1.0,
+            "state": 2,
+            "stateStr": "SECONDARY",
+            "uptime": 6,
+            "optime": {
+              "ts": {
+                "$timestamp": {
+                  "t": 1792011821,
+                  "i": 2
+                }
+              },
+              "t": 17
+            },
+            "optimeDurable": {
+              "ts": {
+                "$timestamp": {
+                  "t": 1792011821,
+                  "i": 2
+                }
+              },
+              "t": 17
+            },
+            "optimeDate": {
+              "$date": "2026-10-14T21:03:41Z"
+            },
+            "optimeDurableDate": {
+              "$date": "2026-10-14T21:03:41Z"
+            },
+            "lastAppliedWallTime": {
+              "$date": "2026-10-14T21:03:41.131Z"
+            },
+            "lastDurableWallTime": {
+              "$date": "2026-10-14T21:03:41.131Z"
+            },
+            "lastHeartbeat": {
+              "$date": "2026-10-14T21:03:45.137Z"
+            },
+            "lastHeartbeatRecv": {
+              "$date": "2026-10-14T21:03:44.986Z"
+            },
+            "pingMs": 0,
+            "lastHeartbeatMessage": "",
+            "syncSourceHost": "mongo3:27017",
+            "syncSourceId": 2,
+            "infoMessage": "",
+            "configVersion": 1,
+            "configTerm": 17
+          },
+          {
+            "_id": 2,
+            "name": "mongo3:27017",
+            "health": 1.0,
+            "state": 1,
+            "stateStr": "PRIMARY",
+            "uptime": 6,
+            "optime": {
+              "ts": {
+                "$timestamp": {
+                  "t": 1792011821,
+                  "i": 2
+                }
+              },
+              "t": 17
+            },
+            "optimeDurable": {
+              "ts": {
+                "$timestamp": {
+                  "t": 1792011821,
+                  "i": 2
+                }
+              },
+              "t": 17
+            },
+            "optimeDate": {
+              "$date": "2026-10-14T21:03:41Z"
+            },
+            "optimeDurableDate": {
+              "$date": "2026-10-14T21:03:41Z"
+            },
+            "lastAppliedWallTime": {
+              "$date": "2026-10-14T21:03:41.131Z"
+            },
+            "lastDurableWallTime": {
+              "$date": "2026-10-14T21:03:41.131Z"
+            },
+            "lastHeartbeat": {
+              "$date": "2026-10-14T21:03:45.138Z"
+            },
+            "lastHeartbeatRecv": {
+              "$date": "2026-10-14T21:03:45.137Z"
+            },
+            "pingMs": 0,
+            "lastHeartbeatMessage": "",
+            "syncSourceHost": "",
+            "syncSourceId": -1,
+            "infoMessage": "",
+            "electionTime": {
+              "$timestamp": {
+                "t": 1792011821,
+                "i": 1
+              }
+            },
+            "electionDate": {
+              "$date": "2026-10-14T21:03:41Z"
+            },
+            "configVersion": 1,
+            "configTerm": 17
+          }
+        ],
+        "ok": 1.0,
+        "$clusterTime": {
+          "clusterTime": {
+            "$timestamp": {
+              "t": 1792011821,
+              "i": 2
+            }
+          },
+          "signature": {
+            "hash": {
+              "$binary": {
+                "base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+                "subType": "00"
+              }
+            },
+            "keyId": 0
+          }
+        },
+        "operationTime": {
+          "$timestamp": {
+            "t": 1792011821,
+            "i": 2
+          }
+        }
+      }
+    }
+  ]
+}

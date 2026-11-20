@@ -1,0 +1,44 @@
+# Prometheus Alerting Rules for ThreatPulse MongoDB SOC Platform
+# Chapter 14: Monitoring & Alert Generation
+groups:
+  - name: mongodb_reliability_alerts
+    rules:
+      - alert: MongoDBCacheHitRatioLow
+        expr: (mongodb_mongod_wiredtiger_cache_pages_requested - mongodb_mongod_wiredtiger_cache_pages_read) / mongodb_mongod_wiredtiger_cache_pages_requested * 100 < 80
+        for: 1m
+        labels:
+          severity: warning
+          component: wiredtiger
+          metric: cache_hit_ratio
+        annotations:
+          summary: "WiredTiger Cache Hit Ratio below threshold (< 80%)"
+          description: "Instance {{ $labels.instance }} cache hit ratio has fallen to {{ $value }}%. High disk swap penalty expected."
+          threshold: "80%"
+          value: "{{ $value }}%"
+
+      - alert: MongoDBReplicationLagHigh
+        expr: mongodb_mongod_replset_member_replication_lag > 10
+        for: 30s
+        labels:
+          severity: warning
+          component: replication
+          metric: replication_lag
+        annotations:
+          summary: "MongoDB Secondary Replication Lag exceeds threshold (> 10s)"
+          description: "Replica set member {{ $labels.instance }} replication lag has reached {{ $value }}s. Risk of stale reads."
+          threshold: "10s"
+          value: "{{ $value }}s"
+
+      - alert: MongoDBReplicaMemberDown
+        expr: mongodb_mongod_replset_member_state == 8 or mongodb_mongod_replset_member_health == 0
+        for: 30s
+        labels:
+          severity: critical
+          component: replication
+          metric: replica_member_down
+        annotations:
+          summary: "MongoDB Replica Set member DOWN"
+          description: "Replica member {{ $labels.instance }} is unreachable or in DOWN state. Quorum may be degraded."
+          threshold: "1"
+          value: "0"
+

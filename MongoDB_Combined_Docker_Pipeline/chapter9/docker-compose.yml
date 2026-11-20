@@ -1,0 +1,49 @@
+# Chapter 9 labs: the 3-node replica set from Chapter 8 plus the lab image.
+#
+#   docker compose up -d mongo1 mongo2 mongo3     start the replica set
+#   docker compose run --rm lab setup             initialise rs0
+#   docker compose run --rm lab 9.1               Lab 9.1
+#   docker compose run --rm lab 9.1-try           Activity 9.1 (Try it yourself)
+#   docker compose run --rm lab 9.2               Lab 9.2 (network partition)
+#   docker compose run --rm lab observer          observer only (Lab 9.2, Terminal 1)
+#   docker compose down                           stop and remove everything
+
+name: mongodb-lab09
+
+services:
+  mongo1:
+    image: mongo:7.0
+    container_name: mongo1
+    hostname: mongo1
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    networks: [mongo-net]
+
+  mongo2:
+    image: mongo:7.0
+    container_name: mongo2
+    hostname: mongo2
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    networks: [mongo-net]
+
+  mongo3:
+    image: mongo:7.0
+    container_name: mongo3
+    hostname: mongo3
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    networks: [mongo-net]
+
+  # The lab scripts. The Docker socket lets Lab 9.2 run
+  # "docker network disconnect / connect" on the mongo containers.
+  lab:
+    image: ${LAB_IMAGE:-mongodb-lab09:local}
+    build: .
+    environment:
+      LAB_NETWORK: mongo-net-09
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./output:/lab/output
+    networks: [mongo-net]
+
+networks:
+  mongo-net:
+    name: mongo-net-09

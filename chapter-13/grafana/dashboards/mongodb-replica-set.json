@@ -1,0 +1,248 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "id": 100,
+      "title": "MongoDB Replica Set Topology & Overview",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "Prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "green", "value": 1 }
+            ]
+          }
+        }
+      },
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 1 },
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.3.3",
+      "targets": [
+        {
+          "expr": "count(mongodb_mongod_replset_member_state == 1)",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Primary Elected",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "Prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "yellow", "value": 2 },
+              { "color": "green", "value": 3 }
+            ]
+          }
+        }
+      },
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 1 },
+      "id": 2,
+      "title": "Healthy Members Online",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "count(mongodb_mongod_replset_member_health == 1)",
+          "instant": true,
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "Prometheus" },
+      "gridPos": { "h": 4, "w": 5, "x": 8, "y": 1 },
+      "id": 3,
+      "title": "Operations Rate (ops/sec)",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "sum(rate(mongodb_op_counters_total[1m]))",
+          "instant": true,
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "Prometheus" },
+      "gridPos": { "h": 4, "w": 5, "x": 13, "y": 1 },
+      "id": 4,
+      "title": "Max Replication Lag",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "max(mongodb_mongod_replset_member_replication_lag)",
+          "instant": true,
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "Prometheus" },
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 1 },
+      "id": 5,
+      "title": "Cumulative Elections",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "max(mongodb_mongod_replset_elections_total)",
+          "instant": true,
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 5 },
+      "id": 101,
+      "title": "Deployment Telemetry & Operational Health",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "Prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 6 },
+      "id": 6,
+      "title": "1. Member State Timeline (1=PRIMARY, 2=SECONDARY, 0=DOWN)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "mongodb_mongod_replset_member_state",
+          "legendFormat": "{{instance}} ({{set}})",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "Prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 6 },
+      "id": 7,
+      "title": "2. Operations Per Second by Type",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "sum by (type) (rate(mongodb_op_counters_total[1m]))",
+          "legendFormat": "{{type}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "Prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 14 },
+      "id": 8,
+      "title": "3. Replication Lag per Secondary Member (Seconds)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "mongodb_mongod_replset_member_replication_lag",
+          "legendFormat": "{{instance}} Lag",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "Prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 14 },
+      "id": 9,
+      "title": "4. Inter-Node Heartbeat Ping Latency (ms)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "mongodb_mongod_replset_member_ping_ms",
+          "legendFormat": "{{instance}} Ping",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "Prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 22 },
+      "id": 10,
+      "title": "5. Client Connections (Current vs Available)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "mongodb_connections{state=\"current\"}",
+          "legendFormat": "Current Connections",
+          "refId": "A"
+        },
+        {
+          "expr": "mongodb_connections{state=\"available\"}",
+          "legendFormat": "Available Connections",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "Prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 22 },
+      "id": 11,
+      "title": "6. WiredTiger Cache Usage (MiB)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "mongodb_mongod_wiredtiger_cache_bytes{type=\"total\"} / 1024 / 1024",
+          "legendFormat": "Bytes in Cache (MiB)",
+          "refId": "A"
+        },
+        {
+          "expr": "mongodb_mongod_wiredtiger_cache_bytes{type=\"dirty\"} / 1024 / 1024",
+          "legendFormat": "Tracked Dirty Pages (MiB)",
+          "refId": "B"
+        }
+      ]
+    }
+  ],
+  "refresh": "15s",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["mongodb", "replica-set", "chapter-13", "failover", "prometheus"],
+  "time": { "from": "now-15m", "to": "now" },
+  "timepicker": {
+    "refresh_intervals": ["5s", "15s", "30s", "1m", "5m"]
+  },
+  "timezone": "browser",
+  "title": "ThreatPulse - MongoDB Chapter 13 Replica Set & Ops Dashboard",
+  "uid": "threatpulse-chap13-rs0",
+  "version": 1
+}
+

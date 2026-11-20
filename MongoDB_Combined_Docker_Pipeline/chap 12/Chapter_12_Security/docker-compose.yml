@@ -1,0 +1,95 @@
+name: mongodb-chapter12-security
+
+services:
+  # ============================================================================
+  # MongoDB Secure Database Service (LAB 12.1 & LAB 12.2)
+  # Features:
+  #   1. Mandatory Authentication (--auth)
+  #   2. In-Transit Encryption with TLS (--tlsMode requireTLS)
+  #   3. SAN-backed Server Certificate & CA Validation
+  #   4. Dynamic RBAC initialization via docker-entrypoint-initdb.d
+  # ============================================================================
+  mongo-sec:
+    image: mongo:7.0
+    container_name: chapter12-mongo-security
+    hostname: mongo-sec
+    command:
+      [
+        "mongod",
+        "--auth",
+        "--tlsMode", "requireTLS",
+        "--tlsCertificateKeyFile", "/etc/ssl/mongo/server.pem",
+        "--tlsCAFile", "/etc/ssl/mongo/ca.crt",
+        "--bind_ip_all"
+      ]
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-admin_user}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-AdminSecure2026!}
+    ports:
+      # Port 27030 prevents collisions with Chapters 7-11 (ports 27017-27027)
+      - "127.0.0.1:27030:27017"
+    volumes:
+      - chapter12-mongo-sec-data:/data/db
+      - ./certs:/etc/ssl/mongo:ro
+      - ./init_rbac.js:/docker-entrypoint-initdb.d/init_rbac.js:ro
+    networks:
+      security-net:
+        aliases:
+          - mongo-sec
+          - chapter12-mongo-security
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mongosh",
+          "--tls",
+          "--tlsCAFile", "/etc/ssl/mongo/ca.crt",
+          "--tlsCertificateKeyFile", "/etc/ssl/mongo/client.pem",
+          "-u", "${MONGO_ROOT_USER:-admin_user}",
+          "-p", "${MONGO_ROOT_PASSWORD:-AdminSecure2026!}",
+          "--authenticationDatabase", "admin",
+          "--eval", "db.adminCommand('ping')"
+        ]
+      interval: 8s
+      timeout: 5s
+      retries: 5
+      start_period: 12s
+
+  # ============================================================================
+  # Optional In-Container Test Runner
+  # Allows running verification entirely within the Docker network
+  # ============================================================================
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: chapter12-security-runner:local
+    container_name: chapter12-test-runner
+    depends_on:
+      mongo-sec:
+        condition: service_healthy
+    environment:
+      MONGO_HOST: mongo-sec
+      MONGO_PORT: "27017"
+      MONGO_ROOT_USER: ${MONGO_ROOT_USER:-admin_user}
+      MONGO_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-AdminSecure2026!}
+      APP_READ_USER: ${APP_READ_USER:-app_user_read}
+      APP_READ_PASSWORD: ${APP_READ_PASSWORD:-ReadPassword2026!}
+      APP_WRITE_USER: ${APP_WRITE_USER:-app_user_write}
+      APP_WRITE_PASSWORD: ${APP_WRITE_PASSWORD:-WritePassword2026!}
+      TLS_CA_FILE: /app/certs/ca.crt
+      TLS_CLIENT_PEM: /app/certs/client.pem
+    volumes:
+      - ./certs:/app/certs:ro
+    networks:
+      - security-net
+    profiles: ["runner"]
+
+networks:
+  security-net:
+    name: chapter12-security-net
+
+volumes:
+  chapter12-mongo-sec-data:
+    name: chapter12-mongo-sec-data

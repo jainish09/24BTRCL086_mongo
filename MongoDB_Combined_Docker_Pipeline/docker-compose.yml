@@ -1,0 +1,107 @@
+name: mongodb-combined-pipeline
+
+services:
+
+  mongo1:
+    image: mongo:7.0
+    container_name: combined-mongo1
+    hostname: mongo1
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    ports:
+      - "127.0.0.1:27020:27017"
+    volumes:
+      - mongo1-data:/data/db
+    networks:
+      mongo-net:
+        aliases:
+          - mongo1
+    restart: unless-stopped
+
+  mongo2:
+    image: mongo:7.0
+    container_name: combined-mongo2
+    hostname: mongo2
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    ports:
+      - "127.0.0.1:27018:27017"
+    volumes:
+      - mongo2-data:/data/db
+    networks:
+      mongo-net:
+        aliases: [mongo2]
+    restart: unless-stopped
+
+  mongo3:
+    image: mongo:7.0
+    container_name: combined-mongo3
+    hostname: mongo3
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    ports:
+      - "127.0.0.1:27019:27017"
+    volumes:
+      - mongo3-data:/data/db
+    networks:
+      mongo-net:
+        aliases: [mongo3]
+    restart: unless-stopped
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dashboard
+    container_name: combined-dashboard
+    env_file:
+      - ./lab7/backend/.env
+    environment:
+      MONGODB_URI: ${MONGODB_URI:?Set MONGODB_URI in the project .env file}
+      DB_NAME: ${DB_NAME:-threat_intel_db}
+      COLLECTION_NAME: ${COLLECTION_NAME:-threat_reports}
+      HOST: 0.0.0.0
+      PORT: "8080"
+      HOST_RUNNER_URL: ${HOST_RUNNER_URL:-http://172.29.224.1:8001}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./lab7/backend:/app/backend
+      - ./lab7/frontend:/app/frontend
+      - ./chapter8:/app/chapter8:ro
+      - ./chapter9/output:/app/chapter9/output:ro
+    ports:
+      - "127.0.0.1:8080:8080"
+    networks: [mongo-net]
+    restart: unless-stopped
+
+  lab8:
+    build:
+      context: .
+      dockerfile: Dockerfile.lab8
+    image: combined-mongodb-lab8:local
+    working_dir: /work
+    volumes:
+      - ./chapter8:/work
+    networks: [mongo-net]
+    profiles: ["tools"]
+
+  lab9:
+    build:
+      context: ./chapter9
+      dockerfile: Dockerfile
+    image: combined-mongodb-lab9:local
+    environment:
+      LAB_NETWORK: combined-mongo-net
+      OUTPUT_DIR: /lab/output
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./chapter9/output:/lab/output
+    networks: [mongo-net]
+    profiles: ["tools"]
+
+networks:
+  mongo-net:
+    name: combined-mongo-net
+
+volumes:
+  mongo1-data:
+  mongo2-data:
+  mongo3-data:

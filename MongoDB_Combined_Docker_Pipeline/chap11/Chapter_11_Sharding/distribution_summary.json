@@ -1,0 +1,121 @@
+{
+  "analysis_timestamp": "2026-10-30T18:00:42.341097+00:00",
+  "database": "exp11_db",
+  "collections": {
+    "hotspot_data": {
+      "shard_key": "{ ts: 1 }",
+      "total_documents": 10000,
+      "shard1_count": 10000,
+      "shard2_count": 0,
+      "shard1_percentage": 100.0,
+      "shard2_percentage": 0.0,
+      "shard1_storage_bytes": 1277952,
+      "shard2_storage_bytes": 0,
+      "total_chunks": 1,
+      "chunks_per_shard": {
+        "rs-shard1": 1
+      },
+      "collStats_agg": {
+        "rs-shard1": {
+          "count": 10000,
+          "size": 2799500,
+          "storageSize": 1277952
+        }
+      }
+    },
+    "even_data": {
+      "shard_key": "{ user_id: 'hashed' }",
+      "total_documents": 10000,
+      "shard1_count": 4943,
+      "shard2_count": 5057,
+      "shard1_percentage": 49.43,
+      "shard2_percentage": 50.57,
+      "shard1_storage_bytes": 1204224,
+      "shard2_storage_bytes": 1232896,
+      "total_chunks": 2,
+      "chunks_per_shard": {
+        "rs-shard2": 1,
+        "rs-shard1": 1
+      },
+      "collStats_agg": {
+        "rs-shard1": {
+          "count": 4943,
+          "size": 1318396,
+          "storageSize": 1204224
+        },
+        "rs-shard2": {
+          "count": 5057,
+          "size": 1349038,
+          "storageSize": 1232896
+        }
+      }
+    }
+  },
+  "queries": {
+    "hotspot_range_query": {
+      "query_label": "Range Query on Ranged Key: { ts: { $gte, $lte } }",
+      "filter": "{'ts': {'$gte': datetime.datetime(2026, 10, 30, 0, 0, 10, tzinfo=datetime.timezone.utc), '$lte': datetime.datetime(2026, 10, 30, 0, 0, 30, tzinfo=datetime.timezone.utc)}}",
+      "targeting_type": "Single-Shard Targeted",
+      "shards_contacted_count": 1,
+      "total_n_returned": 2001,
+      "total_docs_examined": 0,
+      "execution_time_ms": 27,
+      "shards_detail": [
+        {
+          "shardName": "rs-shard1",
+          "nReturned": 2001,
+          "docsExamined": 0,
+          "keysExamined": 0,
+          "stage": "FETCH",
+          "timeMillis": 0
+        }
+      ]
+    },
+    "even_range_query": {
+      "query_label": "Range Query on Hashed Key: { user_id: { $gte, $lte } }",
+      "filter": "{'user_id': {'$gte': 'usr_20000000', '$lte': 'usr_40000000'}}",
+      "targeting_type": "Scatter-Gather (All Shards)",
+      "shards_contacted_count": 2,
+      "total_n_returned": 2134,
+      "total_docs_examined": 0,
+      "execution_time_ms": 5,
+      "shards_detail": [
+        {
+          "shardName": "rs-shard1",
+          "nReturned": 1035,
+          "docsExamined": 0,
+          "keysExamined": 0,
+          "stage": "SHARDING_FILTER",
+          "timeMillis": 0
+        },
+        {
+          "shardName": "rs-shard2",
+          "nReturned": 1099,
+          "docsExamined": 0,
+          "keysExamined": 0,
+          "stage": "SHARDING_FILTER",
+          "timeMillis": 0
+        }
+      ]
+    },
+    "even_point_query": {
+      "query_label": "Point Query on Hashed Key: { user_id: 'usr_95822412_2824' }",
+      "filter": "{'user_id': 'usr_95822412_2824'}",
+      "targeting_type": "Single-Shard Targeted",
+      "shards_contacted_count": 1,
+      "total_n_returned": 1,
+      "total_docs_examined": 0,
+      "execution_time_ms": 13,
+      "shards_detail": [
+        {
+          "shardName": "rs-shard1",
+          "nReturned": 1,
+          "docsExamined": 0,
+          "keysExamined": 0,
+          "stage": "FETCH",
+          "timeMillis": 0
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,32 @@
+ACTIVITY 9.1 (TRY IT YOURSELF) - JOURNALING J: TRUE VS J: FALSE
+
+Replica set check
+  replica set rs0 is already initialised
+  member         state      health
+  mongo1:27017   SECONDARY  1
+  mongo2:27017   PRIMARY    1
+  mongo3:27017   SECONDARY  1
+  writeConcernMajorityJournalDefault = True
+
+Insert 1000 documents for each of the 6 combinations
+  w: 1, j: false                 ... total 1.449 s   avg 1.449 ms
+  w: 1, j: true                  ... total 4.185 s   avg 4.185 ms
+  w: majority, j: false          ... total 6.911 s   avg 6.911 ms
+  w: majority, j: true           ... total 4.956 s   avg 4.956 ms
+  w: all (w: 3), j: false        ... total 6.833 s   avg 6.833 ms
+  w: all (w: 3), j: true         ... total 13.403 s   avg 13.403 ms
+
+Comparison table (average latency per write)
+
+  Write concern      j: false (ms) j: true (ms) Added (ms)  Added %  p95 j:f  p95 j:t
+  -----------------------------------------------------------------------------------
+  w: 1                       1.449        4.185     +2.736  +188.8%    2.142    7.584
+  w: majority                6.911        4.956     -1.955   -28.3%    9.553    6.630
+  w: all (w: 3)              6.833       13.403     +6.570   +96.2%    9.302   26.584
+
+Does journaling add significant latency?
+  w: 1        j: true adds +2.736 ms per write (+188.8%). Here the primary must flush its journal to disk before it replies.
+  w: majority j: true adds -1.955 ms (-28.3%). With writeConcernMajorityJournalDefault = True, majority writes are already journaled, so j makes little difference.
+  w: all      j: true adds +6.570 ms (+96.2%). The network wait for the slowest secondary dominates.
+
+MongoDB commands and replies saved to output/try_9_1_journal_latency.json

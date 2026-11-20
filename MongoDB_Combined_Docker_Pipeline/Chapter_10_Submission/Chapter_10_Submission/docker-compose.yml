@@ -1,0 +1,79 @@
+# Chapter 10 labs: three bank servers (MongoDB replica set "rs0") and the payment app.
+# Every container runs the same image, justkamlesh21/mongodb-lab10.
+#
+#   docker compose up -d                     start bank-primary, bank-backup, bank-dr
+#   docker compose run --rm app demo         run every lab and the failover experiment
+#   docker compose run --rm app <command>    lab10.1 | try10.1 | failover | lab10.2 | paystream | status
+#   docker kill bank-primary                 crash the main bank server (docker start to bring it back)
+#   docker compose down -v                   stop everything and delete the data
+#
+#   member         priority   role
+#   bank-primary   2          main bank server, preferred primary
+#   bank-backup    1          takes over while the main server is down
+#   bank-dr        0          disaster-recovery copy: votes, never becomes primary
+
+name: mongodb-lab10
+
+# Name lookups stay on Docker's own DNS: no search domain from the host, and a
+# short timeout. Otherwise looking up a crashed server's name can be passed to
+# the host's DNS and take many seconds, which delays heartbeats and failover.
+x-dns: &dns
+  dns_search: .
+  dns_opt:
+    - timeout:1
+    - attempts:1
+
+x-bank-server: &bank-server
+  <<: *dns
+  image: justkamlesh21/mongodb-lab10
+  command: ["server"]
+  networks:
+    - bank-net
+
+services:
+  bank-primary:
+    <<: *bank-server
+    container_name: bank-primary
+    hostname: bank-primary
+    volumes:
+      - bank-primary-data:/data/db
+
+  bank-backup:
+    <<: *bank-server
+    container_name: bank-backup
+    hostname: bank-backup
+    volumes:
+      - bank-backup-data:/data/db
+
+  bank-dr:
+    <<: *bank-server
+    container_name: bank-dr
+    hostname: bank-dr
+    volumes:
+      - bank-dr-data:/data/db
+
+  # The payment app. It reaches the servers by name on bank-net, and talks to
+  # Docker through the socket so the failover experiment can crash and restart
+  # bank servers by itself.
+  app:
+    <<: *dns
+    image: justkamlesh21/mongodb-lab10
+    profiles: ["app"]
+    command: ["demo"]
+    depends_on:
+      - bank-primary
+      - bank-backup
+      - bank-dr
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - bank-net
+
+volumes:
+  bank-primary-data:
+  bank-backup-data:
+  bank-dr-data:
+
+networks:
+  bank-net:
+    name: bank-net

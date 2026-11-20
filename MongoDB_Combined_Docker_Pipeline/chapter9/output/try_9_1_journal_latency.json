@@ -1,0 +1,441 @@
+{
+  "activity": "Activity 9.1 (Try it yourself) - Journaling j: true vs j: false",
+  "script": "try_9_1_journal_latency.py",
+  "documentsPerRun": 1000,
+  "summary": [
+    {
+      "concern": "w: 1, j: false",
+      "writeConcern": {
+        "wtimeout": 30000,
+        "j": false,
+        "w": 1
+      },
+      "documents": 1000,
+      "total_s": 1.449,
+      "avg_ms": 1.449,
+      "median_ms": 1.332,
+      "p95_ms": 2.142,
+      "max_ms": 8.225,
+      "writes_per_s": 690.4,
+      "count_after": 1000
+    },
+    {
+      "concern": "w: 1, j: true",
+      "writeConcern": {
+        "wtimeout": 30000,
+        "j": true,
+        "w": 1
+      },
+      "documents": 1000,
+      "total_s": 4.185,
+      "avg_ms": 4.185,
+      "median_ms": 3.583,
+      "p95_ms": 7.584,
+      "max_ms": 47.134,
+      "writes_per_s": 239.0,
+      "count_after": 1000
+    },
+    {
+      "concern": "w: majority, j: false",
+      "writeConcern": {
+        "wtimeout": 30000,
+        "j": false,
+        "w": "majority"
+      },
+      "documents": 1000,
+      "total_s": 6.911,
+      "avg_ms": 6.911,
+      "median_ms": 6.298,
+      "p95_ms": 9.553,
+      "max_ms": 14.459,
+      "writes_per_s": 144.7,
+      "count_after": 1000
+    },
+    {
+      "concern": "w: majority, j: true",
+      "writeConcern": {
+        "wtimeout": 30000,
+        "j": true,
+        "w": "majority"
+      },
+      "documents": 1000,
+      "total_s": 4.956,
+      "avg_ms": 4.956,
+      "median_ms": 4.533,
+      "p95_ms": 6.63,
+      "max_ms": 222.998,
+      "writes_per_s": 201.8,
+      "count_after": 1000
+    },
+    {
+      "concern": "w: all (w: 3), j: false",
+      "writeConcern": {
+        "wtimeout": 30000,
+        "j": false,
+        "w": 3
+      },
+      "documents": 1000,
+      "total_s": 6.833,
+      "avg_ms": 6.833,
+      "median_ms": 6.669,
+      "p95_ms": 9.302,
+      "max_ms": 21.595,
+      "writes_per_s": 146.4,
+      "count_after": 1000
+    },
+    {
+      "concern": "w: all (w: 3), j: true",
+      "writeConcern": {
+        "wtimeout": 30000,
+        "j": true,
+        "w": 3
+      },
+      "documents": 1000,
+      "total_s": 13.403,
+      "avg_ms": 13.403,
+      "median_ms": 12.716,
+      "p95_ms": 26.584,
+      "max_ms": 231.017,
+      "writes_per_s": 74.6,
+      "count_after": 1000
+    }
+  ],
+  "journalOverhead": [
+    {
+      "writeConcern": "w: 1",
+      "jFalse_avg_ms": 1.449,
+      "jTrue_avg_ms": 4.185,
+      "added_ms": 2.736,
+      "added_pct": 188.8
+    },
+    {
+      "writeConcern": "w: majority",
+      "jFalse_avg_ms": 6.911,
+      "jTrue_avg_ms": 4.956,
+      "added_ms": -1.955,
+      "added_pct": -28.3
+    },
+    {
+      "writeConcern": "w: all (w: 3)",
+      "jFalse_avg_ms": 6.833,
+      "jTrue_avg_ms": 13.403,
+      "added_ms": 6.57,
+      "added_pct": 96.2
+    }
+  ],
+  "steps": [
+    {
+      "step": "Initialise the replica set",
+      "executedAt": {
+        "$date": "2026-10-14T21:01:53.742Z"
+      },
+      "command": {
+        "replSetInitiate": {
+          "_id": "rs0",
+          "members": [
+            {
+              "_id": 0,
+              "host": "mongo1:27017"
+            },
+            {
+              "_id": 1,
+              "host": "mongo2:27017"
+            },
+            {
+              "_id": 2,
+              "host": "mongo3:27017"
+            }
+          ]
+        }
+      },
+      "result": {
+        "ok": 0.0,
+        "errmsg": "already initialized",
+        "code": 23,
+        "codeName": "AlreadyInitialized",
+        "$clusterTime": {
+          "clusterTime": {
+            "$timestamp": {
+              "t": 1792011711,
+              "i": 137
+            }
+          },
+          "signature": {
+            "hash": {
+              "$binary": {
+                "base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+                "subType": "00"
+              }
+            },
+            "keyId": 0
+          }
+        },
+        "operationTime": {
+          "$timestamp": {
+            "t": 1792011711,
+            "i": 137
+          }
+        }
+      }
+    },
+    {
+      "step": "Replica set configuration",
+      "executedAt": {
+        "$date": "2026-10-14T21:01:53.763Z"
+      },
+      "command": {
+        "replSetGetConfig": 1
+      },
+      "result": {
+        "_id": "rs0",
+        "version": 1,
+        "term": 16,
+        "members": [
+          {
+            "_id": 0,
+            "host": "mongo1:27017",
+            "arbiterOnly": false,
+            "buildIndexes": true,
+            "hidden": false,
+            "priority": 1.0,
+            "tags": {},
+            "secondaryDelaySecs": 0,
+            "votes": 1
+          },
+          {
+            "_id": 1,
+            "host": "mongo2:27017",
+            "arbiterOnly": false,
+            "buildIndexes": true,
+            "hidden": false,
+            "priority": 1.0,
+            "tags": {},
+            "secondaryDelaySecs": 0,
+            "votes": 1
+          },
+          {
+            "_id": 2,
+            "host": "mongo3:27017",
+            "arbiterOnly": false,
+            "buildIndexes": true,
+            "hidden": false,
+            "priority": 1.0,
+            "tags": {},
+            "secondaryDelaySecs": 0,
+            "votes": 1
+          }
+        ],
+        "protocolVersion": 1,
+        "writeConcernMajorityJournalDefault": true,
+        "settings": {
+          "chainingAllowed": true,
+          "heartbeatIntervalMillis": 2000,
+          "heartbeatTimeoutSecs": 10,
+          "electionTimeoutMillis": 10000,
+          "catchUpTimeoutMillis": -1,
+          "catchUpTakeoverDelayMillis": 30000,
+          "getLastErrorModes": {},
+          "getLastErrorDefaults": {
+            "w": 1,
+            "wtimeout": 0
+          },
+          "replicaSetId": {
+            "$oid": "6acf0b84a8bcd3301099c8fd"
+          }
+        }
+      }
+    },
+    {
+      "step": "Insert 1000 documents with w: 1, j: false",
+      "executedAt": {
+        "$date": "2026-10-14T21:01:55.328Z"
+      },
+      "command": {
+        "insert": "latency_test",
+        "$db": "lab09",
+        "documents": "1000 x insert_one",
+        "writeConcern": {
+          "wtimeout": 30000,
+          "j": false,
+          "w": 1
+        }
+      },
+      "result": {
+        "concern": "w: 1, j: false",
+        "writeConcern": {
+          "wtimeout": 30000,
+          "j": false,
+          "w": 1
+        },
+        "documents": 1000,
+        "total_s": 1.449,
+        "avg_ms": 1.449,
+        "median_ms": 1.332,
+        "p95_ms": 2.142,
+        "max_ms": 8.225,
+        "writes_per_s": 690.4,
+        "count_after": 1000
+      }
+    },
+    {
+      "step": "Insert 1000 documents with w: 1, j: true",
+      "executedAt": {
+        "$date": "2026-10-14T21:01:59.769Z"
+      },
+      "command": {
+        "insert": "latency_test",
+        "$db": "lab09",
+        "documents": "1000 x insert_one",
+        "writeConcern": {
+          "wtimeout": 30000,
+          "j": true,
+          "w": 1
+        }
+      },
+      "result": {
+        "concern": "w: 1, j: true",
+        "writeConcern": {
+          "wtimeout": 30000,
+          "j": true,
+          "w": 1
+        },
+        "documents": 1000,
+        "total_s": 4.185,
+        "avg_ms": 4.185,
+        "median_ms": 3.583,
+        "p95_ms": 7.584,
+        "max_ms": 47.134,
+        "writes_per_s": 239.0,
+        "count_after": 1000
+      }
+    },
+    {
+      "step": "Insert 1000 documents with w: majority, j: false",
+      "executedAt": {
+        "$date": "2026-10-14T21:02:07.224Z"
+      },
+      "command": {
+        "insert": "latency_test",
+        "$db": "lab09",
+        "documents": "1000 x insert_one",
+        "writeConcern": {
+          "wtimeout": 30000,
+          "j": false,
+          "w": "majority"
+        }
+      },
+      "result": {
+        "concern": "w: majority, j: false",
+        "writeConcern": {
+          "wtimeout": 30000,
+          "j": false,
+          "w": "majority"
+        },
+        "documents": 1000,
+        "total_s": 6.911,
+        "avg_ms": 6.911,
+        "median_ms": 6.298,
+        "p95_ms": 9.553,
+        "max_ms": 14.459,
+        "writes_per_s": 144.7,
+        "count_after": 1000
+      }
+    },
+    {
+      "step": "Insert 1000 documents with w: majority, j: true",
+      "executedAt": {
+        "$date": "2026-10-14T21:02:12.483Z"
+      },
+      "command": {
+        "insert": "latency_test",
+        "$db": "lab09",
+        "documents": "1000 x insert_one",
+        "writeConcern": {
+          "wtimeout": 30000,
+          "j": true,
+          "w": "majority"
+        }
+      },
+      "result": {
+        "concern": "w: majority, j: true",
+        "writeConcern": {
+          "wtimeout": 30000,
+          "j": true,
+          "w": "majority"
+        },
+        "documents": 1000,
+        "total_s": 4.956,
+        "avg_ms": 4.956,
+        "median_ms": 4.533,
+        "p95_ms": 6.63,
+        "max_ms": 222.998,
+        "writes_per_s": 201.8,
+        "count_after": 1000
+      }
+    },
+    {
+      "step": "Insert 1000 documents with w: all (w: 3), j: false",
+      "executedAt": {
+        "$date": "2026-10-14T21:02:19.705Z"
+      },
+      "command": {
+        "insert": "latency_test",
+        "$db": "lab09",
+        "documents": "1000 x insert_one",
+        "writeConcern": {
+          "wtimeout": 30000,
+          "j": false,
+          "w": 3
+        }
+      },
+      "result": {
+        "concern": "w: all (w: 3), j: false",
+        "writeConcern": {
+          "wtimeout": 30000,
+          "j": false,
+          "w": 3
+        },
+        "documents": 1000,
+        "total_s": 6.833,
+        "avg_ms": 6.833,
+        "median_ms": 6.669,
+        "p95_ms": 9.302,
+        "max_ms": 21.595,
+        "writes_per_s": 146.4,
+        "count_after": 1000
+      }
+    },
+    {
+      "step": "Insert 1000 documents with w: all (w: 3), j: true",
+      "executedAt": {
+        "$date": "2026-10-14T21:02:34.564Z"
+      },
+      "command": {
+        "insert": "latency_test",
+        "$db": "lab09",
+        "documents": "1000 x insert_one",
+        "writeConcern": {
+          "wtimeout": 30000,
+          "j": true,
+          "w": 3
+        }
+      },
+      "result": {
+        "concern": "w: all (w: 3), j: true",
+        "writeConcern": {
+          "wtimeout": 30000,
+          "j": true,
+          "w": 3
+        },
+        "documents": 1000,
+        "total_s": 13.403,
+        "avg_ms": 13.403,
+        "median_ms": 12.716,
+        "p95_ms": 26.584,
+        "max_ms": 231.017,
+        "writes_per_s": 74.6,
+        "count_after": 1000
+      }
+    }
+  ]
+}

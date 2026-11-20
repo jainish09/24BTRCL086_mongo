@@ -1,0 +1,28 @@
+LAB 9.1 - MEASURE WRITE CONCERN LATENCY
+
+Replica set check
+  replica set rs0 is already initialised
+  member         state      health
+  mongo1:27017   SECONDARY  1
+  mongo2:27017   PRIMARY    1
+  mongo3:27017   SECONDARY  1
+
+Step 1: insert 1000 documents one at a time with each write concern (primary: mongo2:27017)
+  w: 1               ... total 2.313 s   (1000 documents stored)
+  w: majority        ... total 8.380 s   (1000 documents stored)
+  w: all (w: 3)      ... total 6.286 s   (1000 documents stored)
+
+Step 2 + 3: average latency per write and comparison table
+
+  Write concern      Total (s)  Avg (ms)   Median      p95      Max  Writes/s  vs w:1
+  -----------------------------------------------------------------------------------
+  w: 1                   2.313     2.313    2.062    3.863   14.600     432.3   1.00x
+  w: majority            8.380     8.380    7.690   12.796   37.519     119.3   3.62x
+  w: all (w: 3)          6.286     6.286    5.349   14.182   17.577     159.1   2.72x
+
+What the numbers show
+  w: 1        returns as soon as the primary has applied the write: 2.313 ms per write.
+  w: majority also waits for 1 secondary to confirm (2 of 3 members): +6.067 ms, 3.62x w: 1.
+  w: all      waits for every secondary, so it is as slow as the slowest member: +3.973 ms, 2.72x w: 1.
+
+MongoDB commands and replies saved to output/lab_9_1_write_concern_latency.json

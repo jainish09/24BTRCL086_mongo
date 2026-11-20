@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: threatpulse-config
+  namespace: threatpulse
+data:
+  DB_NAME: "threat_intel_db"
+  COLLECTION_NAME: "threat_reports"
+  PORT: "8080"
+  HOST: "0.0.0.0"

@@ -1,0 +1,13 @@
+apiVersion: 1
+
+providers:
+  - name: "MongoDB Chapter 13 Dashboards"
+    orgId: 1
+    folder: "MongoDB Operations"
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 15
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/dashboards
+      foldersFromFilesStructure: true

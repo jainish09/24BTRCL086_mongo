@@ -1,0 +1,17 @@
+# =============================================================================
+# MongoDB Atlas Terraform Deployment Variables Template
+# Copy this file to terraform.tfvars and fill in your authentic Atlas API keys.
+# DO NOT COMMIT CREDENTIALS TO VERSION CONTROL.
+# =============================================================================
+
+atlas_public_key  = "YOUR_ATLAS_PUBLIC_API_KEY"
+atlas_private_key = "YOUR_ATLAS_PRIVATE_API_KEY"
+atlas_org_id      = "YOUR_MONGODB_ATLAS_ORG_ID"
+
+cluster_name      = "threatpulse-cloud-cluster"
+tier              = "M0"
+region            = "AP_SOUTH_1"
+
+db_username       = "threatpulse_admin"
+db_password       = "ReplaceWithStrongPassword2026!"
+allowed_cidr      = "0.0.0.0/0"

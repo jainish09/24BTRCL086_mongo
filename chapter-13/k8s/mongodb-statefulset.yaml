@@ -1,0 +1,104 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-service
+  labels:
+    app: mongodb
+spec:
+  ports:
+    - port: 27017
+      targetPort: 27017
+      name: mongodb
+  clusterIP: None
+  selector:
+    app: mongodb
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongodb-init-config
+data:
+  init-rs.sh: |
+    #!/bin/sh
+    echo "Waiting for all 3 StatefulSet pods to be ready..."
+    until mongosh --host mongo-0.mongodb-service --eval 'db.adminCommand("ping")' > /dev/null 2>&1; do
+      sleep 2
+    done
+    echo "Initiating Replica Set rs0 on Kubernetes..."
+    mongosh --host mongo-0.mongodb-service --eval '
+      try {
+        rs.status();
+        console.log("Replica Set already active.");
+      } catch (e) {
+        rs.initiate({
+          _id: "rs0",
+          members: [
+            { _id: 0, host: "mongo-0.mongodb-service.default.svc.cluster.local:27017", priority: 2 },
+            { _id: 1, host: "mongo-1.mongodb-service.default.svc.cluster.local:27017", priority: 1 },
+            { _id: 2, host: "mongo-2.mongodb-service.default.svc.cluster.local:27017", priority: 1 }
+          ]
+        });
+        console.log("Replica Set rs0 initiated successfully.");
+      }
+    '
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo
+spec:
+  serviceName: "mongodb-service"
+  replicas: 3
+  podManagementPolicy: OrderedReady
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: mongodb
+          image: mongo:7.0
+          command:
+            - "mongod"
+            - "--replSet"
+            - "rs0"
+            - "--bind_ip_all"
+          ports:
+            - containerPort: 27017
+              name: mongodb
+          livenessProbe:
+            exec:
+              command:
+                - mongosh
+                - --eval
+                - "db.adminCommand('ping')"
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            exec:
+              command:
+                - mongosh
+                - --eval
+                - "db.adminCommand('ping')"
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+          volumeMounts:
+            - name: mongo-data
+              mountPath: /data/db
+  volumeClaimTemplates:
+    - metadata:
+        name: mongo-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 1Gi
+

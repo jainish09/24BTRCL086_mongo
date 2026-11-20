@@ -1,0 +1,24 @@
+# Environment variables and secrets
+.env
+.env.local
+
+# SSL/TLS Private Keys, Certificates, and CSRs
+certs/*.key
+certs/*.pem
+certs/*.crt
+certs/*.csr
+certs/*.srl
+
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Local databases and Docker volumes
+data/
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db

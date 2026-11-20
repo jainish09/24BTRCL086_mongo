@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  threatpulse-exp10-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: threatpulse-exp10-app
+    restart: unless-stopped
+    ports:
+      - "8095:8095"
+    environment:
+      - MONGODB_URI=mongodb://mongo1:27017,mongo2:27017,mongo3:27017/?replicaSet=rs0
+      - DB_NAME=threatpulse_exp10_db
+      - PORT=8095
+      - HOST=0.0.0.0
+    networks:
+      - combined-mongo-net
+
+networks:
+  combined-mongo-net:
+    external: true
